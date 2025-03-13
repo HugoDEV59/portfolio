@@ -1,9 +1,14 @@
+'use client';
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from '@vercel/analytics/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import { metadata } from './metadata';
 
 // Configuration des polices
 const geistSans = Geist({
@@ -18,28 +23,23 @@ const geistMono = Geist_Mono({
   display: 'swap',
 });
 
-// Métadonnées du site
-export const metadata: Metadata = {
-  title: "Portfolio Développeur Web | Geek & Professionnel",
-  description: "Portfolio de développeur web avec un design geek, interactif et professionnel. Découvrez mes projets, compétences et expériences.",
-  keywords: "développeur web, portfolio, react, next.js, frontend, backend, fullstack, développeur javascript, développeur react",
-  authors: [{ name: "Votre Nom" }],
-  creator: "Votre Nom",
-  openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
-    url: 'https://votre-domaine.com',
-    title: 'Portfolio Développeur Web | Geek & Professionnel',
-    description: 'Portfolio de développeur web avec un design geek, interactif et professionnel. Découvrez mes projets, compétences et expériences.',
-    siteName: 'Portfolio Développeur Web',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Portfolio Développeur Web | Geek & Professionnel',
-    description: 'Portfolio de développeur web avec un design geek, interactif et professionnel. Découvrez mes projets, compétences et expériences.',
-    creator: '@votretwitter',
-  },
-};
+function PageTransition({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className="scroll-smooth">
+    <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-darker text-light min-h-screen flex flex-col`}
       >
@@ -67,7 +67,9 @@ export default function RootLayout({
           <Header />
           
           <main className="flex-grow pt-20 relative">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
           
           <Footer />

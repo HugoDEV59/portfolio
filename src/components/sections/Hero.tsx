@@ -6,8 +6,10 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import Button from '../ui/Button';
-import { FaArrowDown, FaCode, FaEnvelope } from 'react-icons/fa';
+import { FaArrowDown, FaCode, FaEnvelope, FaRocket } from 'react-icons/fa';
 import Image from 'next/image';
+import NeonText from '../ui/NeonText';
+import NeonParticles from '../ui/NeonParticles';
 
 // Enregistrement des plugins GSAP
 if (typeof window !== 'undefined') {
@@ -28,11 +30,13 @@ export default function Hero() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   
   // Valeurs pour les animations parallaxes
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
   
   // Animation de la souris pour les particules
   const mouseX = useMotionValue(0);
@@ -56,14 +60,20 @@ export default function Hero() {
   // Effet de suivi de la souris
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      mouseX.set(clientX);
-      mouseY.set(clientY);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      
+      // Animation de la grille cyber en fonction de la position de la souris
+      if (gridRef.current) {
+        const moveX = (e.clientX - windowSize.width / 2) / 50;
+        const moveY = (e.clientY - windowSize.height / 2) / 50;
+        gridRef.current.style.transform = `perspective(1000px) rotateX(${moveY}deg) rotateY(${-moveX}deg)`;
+      }
     };
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, windowSize]);
   
   // Animation GSAP pour le texte et les éléments
   useEffect(() => {
@@ -121,27 +131,8 @@ export default function Hero() {
         { y: -20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6 },
         '-=0.2'
-      )
-      .to(
-        scrollIndicatorRef.current.querySelector('.scroll-arrow'),
-        { y: 10, repeat: -1, yoyo: true, duration: 0.8, ease: 'power1.inOut' }
       );
     }
-    
-    // Animation des particules
-    const particles = document.querySelectorAll('.hero-particle');
-    particles.forEach((particle, i) => {
-      gsap.to(particle, {
-        y: 'random(-100, 100)',
-        x: 'random(-100, 100)',
-        opacity: 'random(0.1, 0.6)',
-        duration: 'random(10, 20)',
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: i * 0.1,
-      });
-    });
     
     return () => {
       tl.kill();
@@ -169,108 +160,75 @@ export default function Hero() {
     }
   };
   
-  // Génération des particules
-  const particles = Array.from({ length: 30 }, (_, i) => {
-    const colors = ['neon-blue', 'neon-purple', 'neon-pink', 'neon-green', 'neon-orange', 'neon-yellow'];
-    const colorIndex = i % colors.length;
-    const size = Math.random() * 10 + 5;
-    
-    return (
-      <div 
-        key={`particle-${i}`} 
-        className={`hero-particle absolute rounded-full bg-${colors[colorIndex]}/20`}
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
-          opacity: Math.random() * 0.5,
-          filter: `blur(${Math.random() * 2}px)`,
-        }}
-      />
-    );
-  });
-  
   // Transformation de la position de la souris pour l'effet parallaxe
-  const imageX = useTransform(smoothMouseX, [0, windowSize.width], [20, -20]);
-  const imageY = useTransform(smoothMouseY, [0, windowSize.height], [20, -20]);
+  const imageX = useTransform(smoothMouseX, [0, windowSize.width], [30, -30]);
+  const imageY = useTransform(smoothMouseY, [0, windowSize.height], [30, -30]);
+  
+  // Effet de parallaxe pour les cercles lumineux
+  const circle1X = useTransform(smoothMouseX, [0, windowSize.width], [-20, 20]);
+  const circle1Y = useTransform(smoothMouseY, [0, windowSize.height], [-20, 20]);
+  const circle2X = useTransform(smoothMouseX, [0, windowSize.width], [20, -20]);
+  const circle2Y = useTransform(smoothMouseY, [0, windowSize.height], [20, -20]);
+  const circle3X = useTransform(smoothMouseX, [0, windowSize.width], [-15, 15]);
+  const circle3Y = useTransform(smoothMouseY, [0, windowSize.height], [15, -15]);
   
   return (
-    <motion.section 
-      ref={containerRef}
-      className="relative min-h-screen flex items-center py-20 overflow-hidden"
-      style={{ y, opacity }}
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      {/* Particules d'arrière-plan */}
-      <div className="absolute inset-0 pointer-events-none neon-particles">
-        {particles}
-      </div>
+    <section id="hero" className="relative min-h-screen flex items-center justify-center py-20 overflow-hidden">
+      {/* Fond avec dégradé */}
+      <div className="absolute inset-0 bg-gradient-radial from-darker via-dark to-black opacity-90"></div>
       
-      {/* Cercles lumineux */}
-      <div className="absolute top-1/4 -left-20 w-[400px] h-[400px] rounded-full bg-gradient-radial from-neon-blue/15 via-transparent to-transparent blur-3xl animate-pulse-slow"></div>
-      <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] rounded-full bg-gradient-radial from-neon-purple/15 via-transparent to-transparent blur-3xl animate-pulse-slow"></div>
-      <div className="absolute top-2/3 left-1/3 w-[300px] h-[300px] rounded-full bg-gradient-radial from-neon-pink/10 via-transparent to-transparent blur-3xl animate-pulse-slow"></div>
+      {/* Grille cyber en perspective */}
+      <motion.div 
+        ref={gridRef}
+        className="absolute inset-0 cyber-grid opacity-20 transition-transform duration-300"
+        style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}
+      ></motion.div>
       
-      {/* Lignes de grille */}
-      <div className="absolute inset-0 grid grid-cols-6 pointer-events-none">
-        {Array.from({ length: 7 }).map((_, i) => (
-          <div key={`grid-v-${i}`} className="h-full w-px bg-gradient-to-b from-transparent via-neon-blue/10 to-transparent"></div>
-        ))}
-      </div>
-      <div className="absolute inset-0 grid grid-rows-6 pointer-events-none">
-        {Array.from({ length: 7 }).map((_, i) => (
-          <div key={`grid-h-${i}`} className="w-full h-px bg-gradient-to-r from-transparent via-neon-purple/10 to-transparent"></div>
-        ))}
-      </div>
+      {/* Effet de scanline */}
+      <div className="absolute inset-0 scanline-effect opacity-10 pointer-events-none"></div>
+      
+      {/* Cercles lumineux avec effet de parallaxe */}
+      <motion.div 
+        className="absolute top-1/4 -left-20 w-[600px] h-[600px] rounded-full bg-gradient-radial from-neon-blue/20 via-transparent to-transparent blur-[100px]"
+        style={{ x: circle1X, y: circle1Y }}
+      ></motion.div>
+      <motion.div 
+        className="absolute bottom-1/4 -right-20 w-[700px] h-[700px] rounded-full bg-gradient-radial from-neon-purple/20 via-transparent to-transparent blur-[100px]"
+        style={{ x: circle2X, y: circle2Y }}
+      ></motion.div>
+      <motion.div 
+        className="absolute top-2/3 left-1/3 w-[500px] h-[500px] rounded-full bg-gradient-radial from-neon-pink/15 via-transparent to-transparent blur-[100px]"
+        style={{ x: circle3X, y: circle3Y }}
+      ></motion.div>
+      
+      {/* Particules néon flottantes */}
+      <NeonParticles count={40} colors={['neon-blue', 'neon-purple', 'neon-pink', 'neon-green']} />
       
       {/* Contenu principal */}
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Texte et CTA */}
+          {/* Colonne de gauche - Texte */}
           <motion.div variants={itemVariants} className="space-y-8">
             <div className="space-y-4">
               <motion.h1 
                 ref={headingRef}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight glassmorphism p-6 rounded-xl border border-gray-700/50 shadow-lg"
               >
-                <span className="text-light">Développeur Web</span>
-                <br />
-                <span className="neon-text-blue animate-neon-pulse">Créatif</span> & <span className="neon-text-purple animate-neon-pulse-purple">Passionné</span>
+                <span className="text-light">Développeur Web </span>
+                <br/>
+                <span className="mr-2 text-neon-blue"><NeonText color="blue" flickerIntensity="low">Créatif</NeonText></span> &   
+                <span className="ml-2 text-neon-purple"><NeonText color="purple" flickerIntensity="medium"> Passionné</NeonText></span>
               </motion.h1>
               
               <motion.p 
                 ref={subheadingRef}
-                className="text-xl text-gray-300 max-w-lg"
+                className="text-xl md:text-2xl text-gray-300 max-w-lg glassmorphism p-4 rounded-xl border border-gray-700/50"
               >
-                Je crée des expériences web <span className="neon-text-green">modernes</span>, <span className="neon-text-pink">interactives</span> et <span className="neon-text-orange">performantes</span> qui transforment vos idées en réalité numérique.
+                Je crée des expériences web <span><NeonText color="green">modernes</NeonText></span>, 
+                <span className="mx-1"><NeonText color="pink">interactives</NeonText></span> et 
+                <span className="ml-1"><NeonText color="orange">performantes</NeonText></span>
               </motion.p>
             </div>
-            
-            <motion.div ref={ctaRef} className="flex flex-wrap gap-4">
-              <Button 
-                variant="neon" 
-                size="lg" 
-                href="/projects"
-                icon={<FaCode />}
-                glowColor="blue"
-                intense={true}
-              >
-                Voir mes projets
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="lg" 
-                href="/contact"
-                glowColor="purple"
-                icon={<FaEnvelope />}
-              >
-                Me contacter
-              </Button>
-            </motion.div>
             
             {/* Badges de compétences */}
             <motion.div 
@@ -283,71 +241,148 @@ export default function Hero() {
                 { name: 'TypeScript', color: 'pink' },
                 { name: 'Tailwind CSS', color: 'green' },
                 { name: 'Node.js', color: 'orange' }
-              ].map((skill) => (
-                <span 
+              ].map((skill, index) => (
+                <motion.span 
                   key={skill.name}
-                  className={`px-3 py-1 text-sm bg-dark/50 border border-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'}/30 rounded-full text-gray-300 hover:border-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'} hover:text-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'} transition-colors duration-300`}
+                  className={`px-3 py-1 text-sm bg-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'}/10 border border-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'}/30 rounded-full text-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'} hover:bg-${skill.color === 'blue' ? 'neon-blue' : skill.color === 'purple' ? 'neon-purple' : skill.color === 'pink' ? 'neon-pink' : skill.color === 'green' ? 'neon-green' : 'neon-orange'}/20 transition-colors duration-300`}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
                 >
                   {skill.name}
-                </span>
+                </motion.span>
               ))}
+            </motion.div>
+            
+            {/* Boutons CTA */}
+            <motion.div ref={ctaRef} className="flex flex-wrap gap-4">
+              <Button 
+                variant="neon" 
+                size="lg" 
+                href="/projects"
+                icon={<FaCode />}
+                glowColor="blue"
+                intense={true}
+                className="transform hover:scale-105 transition-transform duration-300"
+              >
+                Voir mes projets
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="lg" 
+                href="/contact"
+                glowColor="purple"
+                icon={<FaEnvelope />}
+                className="transform hover:scale-105 transition-transform duration-300"
+              >
+                Me contacter
+              </Button>
+            </motion.div>
+            
+            {/* Statistiques */}
+            <motion.div 
+              className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8"
+              variants={itemVariants}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+            >
+              <div className="glassmorphism p-4 rounded-lg border border-neon-blue/20 text-center">
+                <div className="text-3xl font-bold text-neon-blue mb-1">5+</div>
+                <div className="text-sm text-gray-400">Années d'expérience</div>
+              </div>
+              
+              <div className="glassmorphism p-4 rounded-lg border border-neon-purple/20 text-center">
+                <div className="text-3xl font-bold text-neon-purple mb-1">50+</div>
+                <div className="text-sm text-gray-400">Projets réalisés</div>
+              </div>
+              
+              <div className="glassmorphism p-4 rounded-lg border border-neon-green/20 text-center sm:col-span-1 col-span-2">
+                <div className="text-3xl font-bold text-neon-green mb-1">100%</div>
+                <div className="text-sm text-gray-400">Satisfaction client</div>
+              </div>
             </motion.div>
           </motion.div>
           
-          {/* Image/Illustration */}
+          {/* Colonne de droite - Image */}
           <motion.div 
             ref={imageRef}
             className="relative"
             variants={itemVariants}
-            style={{
-              x: imageX,
-              y: imageY,
-            }}
+            style={{ x: imageX, y: imageY }}
           >
             <div className="relative aspect-square max-w-md mx-auto">
               {/* Cercle décoratif */}
               <div className="absolute inset-0 rounded-full border-2 border-dashed border-neon-blue/30 animate-spin-slow"></div>
               
               {/* Image avec masque */}
-              <div className="absolute inset-4 rounded-full overflow-hidden bg-gradient-to-br from-dark/80 to-darker/80 backdrop-blur-sm border border-neon-blue/20 shadow-neon-blue">
+              <div className="absolute inset-4 rounded-full overflow-hidden glassmorphism border border-neon-blue/20 shadow-lg shadow-neon-blue/20">
                 <div className="absolute inset-0 bg-cyber-grid opacity-20"></div>
                 <Image
-                  src="https://placehold.co/600x600/1a1a2e/e2e2e2?text=Developer"
+                  src="/images/0_0_1.png"
                   alt="Développeur Web"
                   fill
-                  className="object-cover mix-blend-luminosity opacity-80"
+                  className="object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-500"
                 />
                 
                 {/* Effet de scanline */}
-                <div className="absolute inset-0 scanline-text"></div>
+                <div className="absolute inset-0 scanline-effect opacity-30"></div>
+                
+                {/* Effet de glitch */}
+                <div className="absolute inset-0 glitch-effect opacity-10"></div>
+                
+                {/* Effet de scan */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neon-blue/10 to-transparent animate-scan"></div>
               </div>
               
               {/* Points lumineux */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-neon-blue shadow-neon-blue animate-pulse"></div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-neon-purple shadow-neon-purple animate-pulse"></div>
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-neon-pink shadow-neon-pink animate-pulse"></div>
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-neon-green shadow-neon-green animate-pulse"></div>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-neon-blue shadow-lg shadow-neon-blue animate-pulse"></div>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-neon-purple shadow-lg shadow-neon-purple animate-pulse"></div>
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-neon-pink shadow-lg shadow-neon-pink animate-pulse"></div>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-neon-green shadow-lg shadow-neon-green animate-pulse"></div>
+              
+              {/* Lignes de connexion */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+                <line x1="100" y1="0" x2="100" y2="20" stroke="rgba(var(--neon-blue), 0.5)" strokeWidth="1" />
+                <line x1="100" y1="180" x2="100" y2="200" stroke="rgba(var(--neon-purple), 0.5)" strokeWidth="1" />
+                <line x1="0" y1="100" x2="20" y2="100" stroke="rgba(var(--neon-pink), 0.5)" strokeWidth="1" />
+                <line x1="180" y1="100" x2="200" y2="100" stroke="rgba(var(--neon-green), 0.5)" strokeWidth="1" />
+              </svg>
+              
+              {/* Cercles concentriques */}
+              <div className="absolute inset-0 rounded-full border border-neon-blue/10"></div>
+              <div className="absolute inset-[10px] rounded-full border border-neon-purple/10"></div>
+              <div className="absolute inset-[20px] rounded-full border border-neon-pink/10"></div>
             </div>
             
-            {/* Statistiques flottantes */}
+            {/* Éléments flottants */}
             <motion.div 
-              className="absolute -top-4 -right-4 p-3 bg-dark/80 backdrop-blur-sm border border-neon-blue/30 rounded-lg shadow-neon-blue neon-border"
+              className="absolute -top-10 -right-10 p-4 glassmorphism rounded-lg border border-neon-blue/20 shadow-lg shadow-neon-blue/10 flex items-center gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.5, duration: 0.5 }}
+              transition={{ delay: 1.5 }}
             >
-              <div className="text-neon-blue font-mono neon-text">5+ ans</div>
-              <div className="text-xs text-gray-400">d'expérience</div>
+              <FaRocket className="text-neon-blue text-xl" />
+              <div>
+                <div className="text-sm font-semibold">Disponible pour</div>
+                <div className="text-xs text-neon-blue">Nouveaux projets</div>
+              </div>
             </motion.div>
             
+            {/* Code décoratif */}
             <motion.div 
-              className="absolute -bottom-4 -left-4 p-3 bg-dark/80 backdrop-blur-sm border border-neon-purple/30 rounded-lg shadow-neon-purple neon-border"
+              className="absolute -bottom-10 -left-10 p-3 glassmorphism rounded-lg border border-neon-green/20 shadow-lg shadow-neon-green/10 max-w-[200px]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.7, duration: 0.5 }}
+              transition={{ delay: 1.7 }}
             >
-              <div className="text-neon-purple font-mono neon-text-purple">50+</div>
-              <div className="text-xs text-gray-400">projets réalisés</div>
+              <pre className="text-xs font-mono">
+                <span className="text-neon-purple">const</span> <span className="text-neon-green">developer</span> = {"{"}
+                <br />  <span className="text-neon-blue">skills</span>: [<span className="text-neon-orange">'React'</span>, ...],
+                <br />  <span className="text-neon-blue">passion</span>: <span className="text-neon-orange">'Unlimited'</span>
+                <br />{"}"}
+              </pre>
             </motion.div>
           </motion.div>
         </div>
@@ -360,14 +395,22 @@ export default function Hero() {
         variants={itemVariants}
       >
         <span className="text-gray-400 text-sm mb-2">Découvrir</span>
-        <div className="scroll-arrow w-6 h-10 border-2 border-neon-blue/50 rounded-full flex justify-center pt-2 shadow-neon-blue">
+        <div className="w-8 h-12 rounded-full border border-gray-500 flex justify-center pt-2">
           <motion.div 
-            className="w-1 h-1 rounded-full bg-neon-blue shadow-neon-blue"
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="w-1.5 h-1.5 rounded-full bg-neon-blue"
+            animate={{ 
+              y: [0, 15, 0],
+              opacity: [0.5, 1, 0.5],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ 
+              duration: 1.5, 
+              repeat: Infinity,
+              ease: "easeInOut" 
+            }}
           />
         </div>
       </motion.div>
-    </motion.section>
+    </section>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import NeonText from './NeonText';
 
 export default function Logo() {
   const [isHovered, setIsHovered] = useState(false);
@@ -61,27 +62,27 @@ export default function Logo() {
         
         <span className="flex">
           {['D', 'e', 'v'].map((letter, i) => (
-            <motion.span 
+            <NeonText 
               key={`dev-${i}`}
-              className="text-neon-blue"
-              variants={letterVariants}
-              custom={i + 1}
+              color="blue"
+              flickerIntensity={i === 1 ? 'high' : 'low'}
+              className="mx-[1px]"
             >
               {letter}
-            </motion.span>
+            </NeonText>
           ))}
         </span>
         
         <span className="flex">
           {['P', 'o', 'r', 't', 'f', 'o', 'l', 'i', 'o'].map((letter, i) => (
-            <motion.span 
+            <NeonText 
               key={`portfolio-${i}`}
-              className="text-neon-purple"
-              variants={letterVariants}
-              custom={i + 4}
+              color="purple"
+              flickerIntensity={i % 3 === 0 ? 'medium' : 'low'}
+              className="mx-[1px]"
             >
               {letter}
-            </motion.span>
+            </NeonText>
           ))}
         </span>
         

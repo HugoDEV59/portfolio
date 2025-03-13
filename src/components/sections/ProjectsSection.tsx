@@ -1,131 +1,300 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import NeonText from '../ui/NeonText';
+import { FaGithub, FaExternalLinkAlt, FaLock } from 'react-icons/fa';
 
+// Projets avec des images plus réalistes et des descriptions détaillées
 const projects = [
   {
     id: 1,
-    title: 'Application de gestion de tâches',
-    description: 'Une application web moderne pour gérer vos tâches quotidiennes avec des fonctionnalités avancées.',
-    tags: ['React', 'Node.js', 'MongoDB'],
-    image: 'https://via.placeholder.com/600x400',
-    link: '#',
-    color: 'blue'
+    title: 'Nexus Dashboard',
+    description: 'Tableau de bord analytique avec visualisations de données en temps réel, authentification multi-facteurs et rapports personnalisables.',
+    longDescription: 'Cette application offre une vue complète des métriques d\'entreprise avec des graphiques interactifs et des alertes intelligentes. L\'interface utilise un design adaptatif pour tous les appareils.',
+    tags: ['React', 'D3.js', 'Node.js', 'MongoDB'],
+    image: '/images/projects/project1.jpg',
+    demoLink: 'https://nexus-dashboard.example.com',
+    githubLink: 'https://github.com/yourusername/nexus-dashboard',
+    isPrivate: false,
+    color: 'blue',
+    featured: true
   },
   {
     id: 2,
-    title: 'Portfolio interactif',
-    description: 'Un portfolio de développeur web avec des animations et des interactions avancées.',
-    tags: ['Next.js', 'Tailwind CSS', 'Framer Motion'],
-    image: 'https://via.placeholder.com/600x400',
-    link: '#',
-    color: 'purple'
+    title: 'Quantum E-commerce',
+    description: 'Plateforme e-commerce complète avec panier, paiement sécurisé via Stripe et gestion des stocks en temps réel.',
+    longDescription: 'Solution e-commerce complète avec un système de recommandation basé sur l\'IA, une gestion des stocks optimisée et une interface d\'administration puissante pour les vendeurs.',
+    tags: ['Next.js', 'TypeScript', 'Stripe', 'PostgreSQL'],
+    image: '/images/projects/project2.jpg',
+    demoLink: 'https://quantum-shop.example.com',
+    githubLink: 'https://github.com/yourusername/quantum-ecommerce',
+    isPrivate: true,
+    color: 'purple',
+    featured: true
   },
   {
     id: 3,
-    title: 'Site e-commerce',
-    description: 'Une plateforme e-commerce complète avec panier, paiement et gestion des commandes.',
-    tags: ['React', 'Stripe', 'Firebase'],
-    image: 'https://via.placeholder.com/600x400',
-    link: '#',
-    color: 'pink'
+    title: 'Nebula Social',
+    description: 'Réseau social moderne avec messagerie en temps réel, partage de médias et système de notifications avancé.',
+    longDescription: 'Application de réseau social avec des fonctionnalités de chat en temps réel, partage de médias, et un système de notifications personnalisables. Optimisée pour les performances mobiles.',
+    tags: ['React Native', 'Firebase', 'GraphQL', 'WebSockets'],
+    image: '/images/projects/project3.jpg',
+    demoLink: 'https://nebula-social.example.com',
+    githubLink: 'https://github.com/yourusername/nebula-social',
+    isPrivate: false,
+    color: 'pink',
+    featured: false
   },
   {
     id: 4,
-    title: 'Application de réservation',
-    description: 'Une application permettant aux utilisateurs de réserver des services en ligne.',
-    tags: ['Vue.js', 'Express', 'PostgreSQL'],
-    image: 'https://via.placeholder.com/600x400',
-    link: '#',
-    color: 'green'
+    title: 'Chronos Booking',
+    description: 'Système de réservation avec calendrier interactif, rappels automatiques et intégration de paiement.',
+    longDescription: 'Application permettant aux entreprises de gérer leurs réservations avec un calendrier interactif, des rappels automatiques par email/SMS et une intégration de paiement sécurisée.',
+    tags: ['Vue.js', 'Express', 'PostgreSQL', 'Twilio'],
+    image: '/images/projects/project4.jpg',
+    demoLink: 'https://chronos-booking.example.com',
+    githubLink: 'https://github.com/yourusername/chronos-booking',
+    isPrivate: false,
+    color: 'green',
+    featured: false
   }
 ];
 
 export default function ProjectsSection() {
+  const [activeProject, setActiveProject] = useState<number | null>(null);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.8, 1], [0.6, 1, 1, 0.6]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
+  const handleProjectClick = (id: number) => {
+    setActiveProject(activeProject === id ? null : id);
+  };
 
   return (
-    <section className="py-20 px-4 relative overflow-hidden" id="projects">
-      <div className="container mx-auto max-w-6xl">
+    <section id="projects" className="py-20 relative overflow-hidden" ref={containerRef}>
+      <motion.div 
+        className="absolute inset-0 bg-cyber-grid opacity-5"
+        style={{ y: backgroundY }}
+      />
+      
+      <div className="container mx-auto max-w-6xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Mes <span className="neon-text-pink">Projets</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-2">
+            <span className="relative">
+              Mes <NeonText color="pink">Projets</NeonText>
+              <motion.span 
+                className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-transparent via-neon-pink to-transparent"
+                initial={{ width: 0 }}
+                whileInView={{ width: "100%" }}
+                transition={{ duration: 1, delay: 0.5 }}
+                viewport={{ once: true }}
+              />
+            </span>
           </h2>
-          <div className="w-20 h-1 bg-neon-pink mx-auto rounded-full"></div>
-          <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
-            Découvrez quelques-uns de mes projets récents. Chaque projet est unique et reflète mon expertise.
+          <p className="mt-6 text-gray-300 max-w-2xl mx-auto">
+            Découvrez une sélection de mes projets les plus récents et innovants, 
+            combinant design moderne et technologies de pointe.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+          {projects.map((project) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true, margin: "-100px" }}
+              variants={cardVariants}
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
+              onClick={() => handleProjectClick(project.id)}
+              className="cursor-pointer"
             >
-              <Card glowColor={project.color as any} className="h-full overflow-hidden">
-                <div className="relative h-48 mb-4 overflow-hidden rounded-md">
+              <Card 
+                glowColor={project.color as any} 
+                className="h-full overflow-hidden backdrop-blur-sm bg-dark/40 border border-gray-800/50 transition-all duration-300"
+                hoverEffect="glow"
+              >
+                {project.featured && (
+                  <div className="absolute top-0 right-0 w-20 h-20 z-10">
+                    <div className="absolute transform rotate-45 bg-neon-blue text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
+                      Featured
+                    </div>
+                  </div>
+                )}
+                
+                <div className="relative h-48 mb-4 overflow-hidden rounded-md group">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     style={{ objectFit: 'cover' }}
-                    className={`transition-transform duration-500 ${
-                      hoveredProject === project.id ? 'scale-110' : 'scale-100'
+                    className={`transition-all duration-700 ${
+                      hoveredProject === project.id ? 'scale-110 brightness-110' : 'scale-100'
                     }`}
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-60"></div>
+                  
+                  {/* Overlay avec liens */}
+                  <div className={`absolute inset-0 bg-dark/70 flex items-center justify-center gap-4 transition-opacity duration-300 ${
+                    hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
+                  }`}>
+                    <a 
+                      href={project.demoLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full bg-neon-blue/20 flex items-center justify-center text-neon-blue hover:bg-neon-blue/30 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <FaExternalLinkAlt />
+                    </a>
+                    <a 
+                      href={project.isPrivate ? "#" : project.githubLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                        project.isPrivate 
+                          ? 'bg-gray-700/20 text-gray-400 cursor-not-allowed' 
+                          : 'bg-neon-purple/20 text-neon-purple hover:bg-neon-purple/30'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (project.isPrivate) e.preventDefault();
+                      }}
+                    >
+                      {project.isPrivate ? <FaLock /> : <FaGithub />}
+                    </a>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-gray-300 mb-4 text-sm">{project.description}</p>
+                
+                <h3 className="text-xl font-semibold mb-2 flex items-center">
+                  {project.title}
+                  {project.isPrivate && (
+                    <FaLock className="ml-2 text-gray-400 text-sm" title="Code source privé" />
+                  )}
+                </h3>
+                
+                <p className="text-gray-300 mb-4 text-sm">
+                  {activeProject === project.id ? project.longDescription : project.description}
+                </p>
+                
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs px-2 py-1 rounded-full bg-dark border border-gray-700 text-gray-300"
+                      className={`text-xs px-2 py-1 rounded-full bg-${project.color}/10 text-${project.color} border border-${project.color}/30`}
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <a href={project.link} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full">
-                    Voir le projet
+                
+                <div className="flex justify-between items-center">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      handleProjectClick(project.id);
+                    }}
+                  >
+                    {activeProject === project.id ? "Moins de détails" : "Plus de détails"}
                   </Button>
-                </a>
+                  
+                  <a 
+                    href={project.demoLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    <span>Démo</span>
+                    <FaExternalLinkAlt size={10} />
+                  </a>
+                </div>
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="text-center mt-12">
-          <Button variant="primary">
-            Voir tous les projets
+        <motion.div 
+          className="text-center mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <Button 
+            variant="primary"
+            className="relative overflow-hidden group"
+          >
+            <span className="relative z-10">Voir tous les projets</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
           </Button>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-gradient-radial from-neon-pink/10 via-transparent to-transparent blur-xl"></div>
+      {/* Effets de fond dynamiques */}
+      <motion.div 
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ opacity }}
+      >
+        <motion.div 
+          className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-gradient-radial from-neon-pink/10 via-transparent to-transparent blur-xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        ></motion.div>
         
         <div className="absolute top-[15%] right-[10%] w-1.5 h-1.5 rounded-full bg-neon-blue animate-pulse-slow"></div>
         <div className="absolute bottom-[20%] left-[15%] w-2 h-2 rounded-full bg-neon-purple animate-pulse-slow"></div>
         <div className="absolute top-[60%] right-[25%] w-1 h-1 rounded-full bg-neon-pink animate-pulse-slow"></div>
-      </div>
+      </motion.div>
     </section>
   );
 } 

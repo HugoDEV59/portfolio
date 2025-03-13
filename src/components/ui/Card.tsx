@@ -1,10 +1,10 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect, useRef } from 'react';
 import { motion, MotionProps, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
-type GlowColor = 'blue' | 'purple' | 'pink' | 'green';
+type GlowColor = 'blue' | 'purple' | 'pink' | 'green' | 'orange' | 'yellow';
 
 interface CardProps extends MotionProps {
   children: ReactNode;
@@ -17,6 +17,7 @@ interface CardProps extends MotionProps {
   interactive?: boolean;
   badge?: string;
   badgeColor?: GlowColor;
+  flickerEffect?: boolean;
 }
 
 export default function Card({ 
@@ -30,9 +31,37 @@ export default function Card({
   interactive = true,
   badge,
   badgeColor = 'blue',
+  flickerEffect = false,
   ...motionProps
 }: CardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isFlickering, setIsFlickering] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!flickerEffect) return;
+    
+    const scheduleNextFlicker = () => {
+      const delay = 5000 + Math.random() * 10000; // Entre 5 et 15 secondes
+      timeoutRef.current = setTimeout(() => {
+        setIsFlickering(true);
+        
+        // Durée du clignotement
+        setTimeout(() => {
+          setIsFlickering(false);
+          scheduleNextFlicker();
+        }, 100 + Math.random() * 200);
+      }, delay);
+    };
+    
+    scheduleNextFlicker();
+    
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [flickerEffect]);
 
   // Correction des classes dynamiques qui ne fonctionnent pas avec Tailwind
   const getGlowClass = (glowColor: GlowColor) => {
@@ -41,6 +70,8 @@ export default function Card({
       case 'purple': return 'neon-border-purple hover:shadow-neon-purple';
       case 'pink': return 'neon-border-pink hover:shadow-neon-pink';
       case 'green': return 'neon-border-green hover:shadow-neon-green';
+      case 'orange': return 'neon-border-orange hover:shadow-neon-orange';
+      case 'yellow': return 'neon-border-yellow hover:shadow-neon-yellow';
       default: return 'neon-border hover:shadow-neon-blue';
     }
   };
@@ -55,6 +86,8 @@ export default function Card({
           case 'purple': return 'border border-neon-purple/30 backdrop-blur-sm';
           case 'pink': return 'border border-neon-pink/30 backdrop-blur-sm';
           case 'green': return 'border border-neon-green/30 backdrop-blur-sm';
+          case 'orange': return 'border border-neon-orange/30 backdrop-blur-sm';
+          case 'yellow': return 'border border-neon-yellow/30 backdrop-blur-sm';
           default: return 'border border-neon-blue/30 backdrop-blur-sm';
         }
       case 'gradient':
@@ -63,6 +96,8 @@ export default function Card({
           case 'purple': return 'bg-gradient-to-br from-dark/60 to-dark/90 border-t border-neon-purple/20 backdrop-blur-md';
           case 'pink': return 'bg-gradient-to-br from-dark/60 to-dark/90 border-t border-neon-pink/20 backdrop-blur-md';
           case 'green': return 'bg-gradient-to-br from-dark/60 to-dark/90 border-t border-neon-green/20 backdrop-blur-md';
+          case 'orange': return 'bg-gradient-to-br from-dark/60 to-dark/90 border-t border-neon-orange/20 backdrop-blur-md';
+          case 'yellow': return 'bg-gradient-to-br from-dark/60 to-dark/90 border-t border-neon-yellow/20 backdrop-blur-md';
           default: return 'bg-gradient-to-br from-dark/60 to-dark/90 border-t border-neon-blue/20 backdrop-blur-md';
         }
       default: return 'bg-dark/25 backdrop-blur-sm';
@@ -75,6 +110,8 @@ export default function Card({
       case 'purple': return 'bg-neon-purple/90 text-dark';
       case 'pink': return 'bg-neon-pink/90 text-dark';
       case 'green': return 'bg-neon-green/90 text-dark';
+      case 'orange': return 'bg-neon-orange/90 text-dark';
+      case 'yellow': return 'bg-neon-yellow/90 text-dark';
       default: return 'bg-neon-blue/90 text-dark';
     }
   };
@@ -106,6 +143,12 @@ export default function Card({
       whileHover={getHoverAnimation()}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      animate={{ 
+        boxShadow: isFlickering 
+          ? 'none' 
+          : `0 0 10px rgba(var(--neon-${glowColor}), 0.5), 0 0 20px rgba(var(--neon-${glowColor}), 0.3)` 
+      }}
+      transition={{ duration: 0.1 }}
       {...motionProps}
     >
       {/* Badge (si présent) */}
@@ -126,28 +169,28 @@ export default function Card({
         {isHovered && interactive && (
           <>
             <motion.div 
-              className={`absolute top-0 left-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : 'neon-green'}`}
+              className={`absolute top-0 left-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : glowColor === 'green' ? 'neon-green' : glowColor === 'orange' ? 'neon-orange' : 'neon-yellow'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             />
             <motion.div 
-              className={`absolute top-0 right-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : 'neon-green'}`}
+              className={`absolute top-0 right-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : glowColor === 'green' ? 'neon-green' : glowColor === 'orange' ? 'neon-orange' : 'neon-yellow'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
             />
             <motion.div 
-              className={`absolute bottom-0 left-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : 'neon-green'}`}
+              className={`absolute bottom-0 left-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : glowColor === 'green' ? 'neon-green' : glowColor === 'orange' ? 'neon-orange' : 'neon-yellow'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
             />
             <motion.div 
-              className={`absolute bottom-0 right-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : 'neon-green'}`}
+              className={`absolute bottom-0 right-0 w-1 h-1 rounded-full bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : glowColor === 'green' ? 'neon-green' : glowColor === 'orange' ? 'neon-orange' : 'neon-yellow'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -164,8 +207,8 @@ export default function Card({
       
       {/* Indicateur de lien (si href est présent) */}
       {href && interactive && (
-        <div className={`absolute bottom-3 right-3 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : 'neon-green'}/20`}>
-          <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 text-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : 'neon-green'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className={`absolute bottom-3 right-3 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : glowColor === 'green' ? 'neon-green' : glowColor === 'orange' ? 'neon-orange' : 'neon-yellow'}/20`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 text-${glowColor === 'blue' ? 'neon-blue' : glowColor === 'purple' ? 'neon-purple' : glowColor === 'pink' ? 'neon-pink' : glowColor === 'green' ? 'neon-green' : glowColor === 'orange' ? 'neon-orange' : 'neon-yellow'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </div>

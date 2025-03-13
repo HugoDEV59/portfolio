@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import Card from '@/components/ui/Card';
 import { 
   FaReact, FaNodeJs, FaDatabase, FaFigma, 
-  FaGitAlt, FaDocker, FaAws, FaTools 
+  FaGitAlt, FaDocker, FaAws, FaTools,
+  FaBrain, FaRocket, FaChartLine
 } from 'react-icons/fa';
 import { 
   SiNextdotjs, SiTypescript, SiTailwindcss, SiMongodb,
   SiPostgresql, SiGraphql, SiRedux, SiJest
 } from 'react-icons/si';
+import NeonText from '../ui/NeonText';
 
 interface Skill {
   name: string;
@@ -29,6 +31,20 @@ interface SkillsData {
 
 export default function SkillsSection() {
   const [activeTab, setActiveTab] = useState('frontend');
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.5], [0.1, 0.3]);
+  const backgroundScale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1.2]);
+
+  const tabs = ['frontend', 'backend', 'design', 'tools'];
 
   const skillCategories = [
     { id: 'frontend', label: 'Frontend' },
@@ -87,17 +103,41 @@ export default function SkillsSection() {
     }
   };
 
-  // Correction des classes dynamiques qui ne fonctionnent pas avec Tailwind
-  const getTabButtonClass = (isActive: boolean, categoryId: string) => {
-    if (!isActive) return 'bg-dark border border-gray-700 hover:border-gray-500';
-    
-    switch(categoryId) {
-      case 'frontend': return 'bg-neon-blue text-dark font-medium';
-      case 'backend': return 'bg-neon-purple text-dark font-medium';
-      case 'design': return 'bg-neon-pink text-dark font-medium';
-      case 'tools': return 'bg-neon-green text-dark font-medium';
-      default: return 'bg-neon-blue text-dark font-medium';
+  // Nouvelles couleurs pour chaque catégorie
+  const tabColors = {
+    frontend: {
+      bg: 'bg-neon-blue',
+      border: 'border-neon-blue',
+      text: 'text-neon-blue',
+      shadow: 'shadow-neon-blue',
+      hover: 'hover:bg-neon-blue/20 hover:border-neon-blue hover:text-neon-blue'
+    },
+    backend: {
+      bg: 'bg-neon-purple',
+      border: 'border-neon-purple',
+      text: 'text-neon-purple',
+      shadow: 'shadow-neon-purple',
+      hover: 'hover:bg-neon-purple/20 hover:border-neon-purple hover:text-neon-purple'
+    },
+    design: {
+      bg: 'bg-neon-pink',
+      border: 'border-neon-pink',
+      text: 'text-neon-pink',
+      shadow: 'shadow-neon-pink',
+      hover: 'hover:bg-neon-pink/20 hover:border-neon-pink hover:text-neon-pink'
+    },
+    tools: {
+      bg: 'bg-neon-green',
+      border: 'border-neon-green',
+      text: 'text-neon-green',
+      shadow: 'shadow-neon-green',
+      hover: 'hover:bg-neon-green/20 hover:border-neon-green hover:text-neon-green'
     }
+  };
+
+  // Fonction pour obtenir la couleur active
+  const getActiveColor = (type: 'bg' | 'border' | 'text' | 'shadow') => {
+    return tabColors[activeTab as keyof typeof tabColors][type];
   };
 
   const getSkillIconClass = (color: string) => {
@@ -113,10 +153,17 @@ export default function SkillsSection() {
       default: return 'bg-neon-blue';
     }
   };
+  
+  // Données pour les statistiques
+  const stats = [
+    { label: "Projets", value: "50+", icon: <FaRocket />, color: "neon-blue" },
+    { label: "Années d'expérience", value: "5+", icon: <FaChartLine />, color: "neon-purple" },
+    { label: "Technologies maîtrisées", value: "20+", icon: <FaBrain />, color: "neon-pink" }
+  ];
 
   return (
-    <section className="py-20 px-4 relative overflow-hidden" id="skills">
-      <div className="container mx-auto max-w-6xl">
+    <section id="skills" className="py-20 relative overflow-hidden" ref={containerRef}>
+      <div className="container mx-auto max-w-6xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -125,23 +172,30 @@ export default function SkillsSection() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Mes <span className="neon-text-blue">Compétences</span>
+            Mes <span className="inline-block"><NeonText color={activeTab === 'frontend' ? 'blue' : activeTab === 'backend' ? 'purple' : activeTab === 'design' ? 'pink' : 'green'}>Compétences</NeonText></span>
           </h2>
-          <div className="w-20 h-1 bg-neon-blue mx-auto rounded-full"></div>
+          <div className={`w-20 h-1 ${getActiveColor('bg')} mx-auto rounded-full`}></div>
           <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
             Un ensemble de technologies et d'outils que j'utilise pour créer des expériences web exceptionnelles.
           </p>
         </motion.div>
 
-        {/* Onglets de catégories */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {skillCategories.map((category) => (
+        {/* Onglets de compétences */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {tabs.map(tab => (
             <button
-              key={category.id}
-              onClick={() => setActiveTab(category.id)}
-              className={getTabButtonClass(activeTab === category.id, category.id)}
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`
+                px-6 py-3 rounded-md font-medium transition-all duration-300
+                ${activeTab === tab 
+                  ? `${tabColors[tab as keyof typeof tabColors].bg} text-dark font-bold shadow-lg ${tabColors[tab as keyof typeof tabColors].shadow}`
+                  : `bg-dark/50 border border-gray-700 text-gray-300 ${tabColors[tab as keyof typeof tabColors].hover}`
+                }
+                transform hover:scale-105 hover:shadow-lg
+              `}
             >
-              {category.label}
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </div>
@@ -155,108 +209,87 @@ export default function SkillsSection() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {skills[activeTab].map((skill, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card glowColor={skill.color as any} className="h-full">
-                <div className="flex flex-col items-center text-center p-2">
-                  <div className={`${getSkillIconClass(skill.color)} mb-4`}>
+            <motion.div 
+              key={index} 
+              variants={itemVariants}
+              onMouseEnter={() => setHoveredSkill(skill.name)}
+              onMouseLeave={() => setHoveredSkill(null)}
+            >
+              <Card 
+                glowColor={skill.color as any} 
+                className={`
+                  h-full border border-gray-800/50 backdrop-blur-sm
+                  transform hover:scale-105 transition-all duration-300
+                  shadow-lg hover:shadow-xl
+                  ${hoveredSkill === skill.name ? `border-${skill.color}` : ''}
+                `}
+                hoverEffect="glow"
+              >
+                <div className="flex flex-col items-center text-center p-4">
+                  <div className={`${getSkillIconClass(skill.color)} mb-4 text-${skill.color}`}>
                     {skill.icon}
                   </div>
                   <h3 className="text-xl font-semibold mb-3">{skill.name}</h3>
                   
-                  {/* Barre de progression */}
-                  <div className="w-full bg-dark/50 h-3 rounded-full overflow-hidden mb-2">
+                  {/* Barre de progression améliorée */}
+                  <div className="w-full bg-dark/70 h-4 rounded-full overflow-hidden mb-2 border border-gray-700">
                     <motion.div
-                      className={`h-full ${getProgressBarClass(skill.color)}`}
+                      className={`h-full ${getProgressBarClass(skill.color)} relative`}
                       initial={{ width: 0 }}
                       animate={{ width: `${skill.level}%` }}
                       transition={{ duration: 1, delay: index * 0.1 }}
-                    ></motion.div>
+                    >
+                      {/* Effet de brillance */}
+                      <motion.div 
+                        className="absolute inset-0 bg-white/20"
+                        animate={{ 
+                          x: ['-100%', '100%'],
+                          opacity: [0, 0.5, 0]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity,
+                          repeatDelay: 3
+                        }}
+                      />
+                    </motion.div>
                   </div>
                   
-                  <span className="text-sm text-gray-300">{skill.level}%</span>
+                  <span className={`text-sm font-medium text-${skill.color}`}>{skill.level}%</span>
                 </div>
               </Card>
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Section des certifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="mt-20"
-        >
-          <h3 className="text-2xl font-bold mb-8 text-center">
-            Certifications & <span className="neon-text-purple">Formations</span>
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card glowColor="purple" className="relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20">
-                <div className="absolute transform rotate-45 bg-neon-purple text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
-                  2023
-                </div>
-              </div>
-              <h4 className="text-xl font-semibold mb-2">AWS Certified Developer</h4>
-              <p className="text-gray-300">Amazon Web Services</p>
-              <p className="mt-2 text-sm text-gray-400">
-                Certification validant les compétences en développement et déploiement d'applications sur AWS.
-              </p>
-            </Card>
-            
-            <Card glowColor="blue" className="relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20">
-                <div className="absolute transform rotate-45 bg-neon-blue text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
-                  2022
-                </div>
-              </div>
-              <h4 className="text-xl font-semibold mb-2">React Advanced Patterns</h4>
-              <p className="text-gray-300">Frontend Masters</p>
-              <p className="mt-2 text-sm text-gray-400">
-                Formation avancée sur les patterns de conception React et les optimisations de performance.
-              </p>
-            </Card>
-            
-            <Card glowColor="green" className="relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20">
-                <div className="absolute transform rotate-45 bg-neon-green text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
-                  2021
-                </div>
-              </div>
-              <h4 className="text-xl font-semibold mb-2">TypeScript Professional</h4>
-              <p className="text-gray-300">TypeScript Academy</p>
-              <p className="mt-2 text-sm text-gray-400">
-                Certification sur l'utilisation avancée de TypeScript dans des projets d'entreprise.
-              </p>
-            </Card>
-            
-            <Card glowColor="pink" className="relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20">
-                <div className="absolute transform rotate-45 bg-neon-pink text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
-                  2020
-                </div>
-              </div>
-              <h4 className="text-xl font-semibold mb-2">UI/UX Design Fundamentals</h4>
-              <p className="text-gray-300">Design+Code</p>
-              <p className="mt-2 text-sm text-gray-400">
-                Formation sur les principes fondamentaux du design d'interface et de l'expérience utilisateur.
-              </p>
-            </Card>
-          </div>
-        </motion.div>
       </div>
 
-      {/* Éléments visuels décoratifs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-gradient-radial from-neon-blue/10 via-transparent to-transparent blur-xl"></div>
-        <div className="absolute bottom-1/4 right-1/3 w-[250px] h-[250px] rounded-full bg-gradient-radial from-neon-purple/10 via-transparent to-transparent blur-lg"></div>
+      {/* Effet de fond dynamique qui change avec l'onglet actif */}
+      <motion.div 
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ opacity: backgroundOpacity }}
+      >
+        <motion.div 
+          className={`absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-gradient-radial from-${activeTab === 'frontend' ? 'neon-blue' : activeTab === 'backend' ? 'neon-purple' : activeTab === 'design' ? 'neon-pink' : 'neon-green'}/10 via-transparent to-transparent blur-xl`}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+          style={{ scale: backgroundScale }}
+        ></motion.div>
         
+        {/* Grille cyber */}
+        <div className="absolute inset-0 bg-cyber-grid opacity-10"></div>
+        
+        {/* Points lumineux */}
         <div className="absolute top-[20%] right-[10%] w-1.5 h-1.5 rounded-full bg-neon-blue animate-pulse-slow"></div>
         <div className="absolute bottom-[15%] left-[20%] w-2 h-2 rounded-full bg-neon-purple animate-pulse-slow"></div>
         <div className="absolute top-[60%] right-[30%] w-1 h-1 rounded-full bg-neon-pink animate-pulse-slow"></div>
-      </div>
+      </motion.div>
     </section>
   );
 } 
