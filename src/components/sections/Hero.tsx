@@ -259,7 +259,7 @@ export default function Hero() {
               <Button 
                 variant="neon" 
                 size="lg" 
-                href="/projects"
+                href="#projects"
                 icon={<FaCode />}
                 glowColor="blue"
                 intense={true}
@@ -271,7 +271,7 @@ export default function Hero() {
               <Button 
                 variant="outline" 
                 size="lg" 
-                href="/contact"
+                href="#contact"
                 glowColor="purple"
                 icon={<FaEnvelope />}
                 className="transform hover:scale-105 transition-transform duration-300"
@@ -282,7 +282,7 @@ export default function Hero() {
             
             {/* Statistiques */}
             <motion.div 
-              className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-8 max-w-[90%]"
               variants={itemVariants}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

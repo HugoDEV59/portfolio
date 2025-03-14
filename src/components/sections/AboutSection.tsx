@@ -139,7 +139,7 @@ export default function AboutSection() {
               
               <div className="space-y-6 text-gray-300">
                 <p>
-                  Passionné par le développement web depuis plus de 5 ans, je me spécialise dans la création d'applications 
+                  Je m'appelle <NeonText color="yellow" className="mx-1">Hugo</NeonText>, j'ai <NeonText color="pink" className="mx-1">21 ans</NeonText> et je vis à <NeonText color="orange" className="mx-1">Dunkerque</NeonText> dans le Nord de la France. Passionné par le développement web depuis plus de 5 ans, je me spécialise dans la création d'applications 
                   <NeonText color="purple" className="mx-1">modernes</NeonText> et 
                   <NeonText color="green" className="mx-1">performantes</NeonText>.
                 </p>
@@ -515,7 +515,7 @@ export default function AboutSection() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:text-right md:pr-8">
-                      <div className="inline-block px-3 py-1 bg-neon-blue/10 border border-neon-blue/30 rounded-full text-sm text-neon-blue mb-2">2020 - 2022</div>
+                      <div className="inline-block px-3 py-1 bg-neon-blue/10 border border-neon-blue/30 rounded-full text-sm text-neon-blue mb-2">2021 - 2023</div>
                       <h4 className="text-xl font-semibold mb-1">BTS Systèmes Numériques</h4>
                       <p className="text-gray-400 text-sm">Option Informatique et Réseaux (Bac+2)</p>
                     </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaGithub, FaLinkedin, FaTwitter, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaTwitter, FaBars, FaTimes, FaChevronDown, FaLock } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
 import Logo from '../ui/Logo';
 import ClientParticles from '../ui/ClientParticles';
@@ -63,6 +63,16 @@ export default function Header() {
       return pathname === '/';
     }
     return pathname.startsWith(href);
+  };
+
+  // Fonction pour faire défiler vers une section
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMobileMenuOpen(false); // Ferme le menu mobile après clic
   };
 
   return (
@@ -131,14 +141,7 @@ export default function Header() {
                   <a
                     href={item.href}
                     className="text-gray-300 hover:text-white transition-colors duration-300 px-3 py-2 rounded-md text-sm font-medium"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.querySelector(item.href);
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                      }
-                      setIsMobileMenuOpen(false); // Ferme le menu mobile après clic
-                    }}
+                    onClick={(e) => scrollToSection(e, item.href)}
                   >
                     {item.name}
                   </a>
@@ -148,53 +151,59 @@ export default function Header() {
 
             {/* Réseaux sociaux desktop avec animations */}
             <div className="flex space-x-3">
-              <motion.a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-neon-blue transition-colors relative group"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="GitHub"
+              {/* GitHub - Désactivé temporairement */}
+              <motion.div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 relative group cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                aria-label="GitHub (temporairement indisponible)"
               >
-                <FaGithub size={18} className="relative z-10" />
+                <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full border border-gray-700 z-10"></div>
+                <FaGithub size={18} className="relative z-20 opacity-50" />
+                <FaLock size={10} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
                 <motion.div 
-                  className="absolute inset-0 bg-dark/50 rounded-full border border-transparent group-hover:border-neon-blue/30"
-                  whileHover={{ boxShadow: '0 0 8px rgba(var(--neon-blue), 0.5)' }}
+                  className="absolute inset-0 bg-dark/50 rounded-full"
                 />
-              </motion.a>
+                {/* Tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                  Réseau social en cours de mise à jour, bientôt disponible
+                </div>
+              </motion.div>
               
-              <motion.a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-neon-purple transition-colors relative group"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="LinkedIn"
+              {/* LinkedIn - Désactivé temporairement */}
+              <motion.div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 relative group cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                aria-label="LinkedIn (temporairement indisponible)"
               >
-                <FaLinkedin size={18} className="relative z-10" />
+                <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full border border-gray-700 z-10"></div>
+                <FaLinkedin size={18} className="relative z-20 opacity-50" />
+                <FaLock size={10} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
                 <motion.div 
-                  className="absolute inset-0 bg-dark/50 rounded-full border border-transparent group-hover:border-neon-purple/30"
-                  whileHover={{ boxShadow: '0 0 8px rgba(var(--neon-purple), 0.5)' }}
+                  className="absolute inset-0 bg-dark/50 rounded-full"
                 />
-              </motion.a>
+                {/* Tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                  Réseau social en cours de mise à jour, bientôt disponible
+                </div>
+              </motion.div>
               
-              <motion.a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-neon-pink transition-colors relative group"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Twitter"
+              {/* Twitter - Désactivé temporairement */}
+              <motion.div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 relative group cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                aria-label="Twitter (temporairement indisponible)"
               >
-                <FaTwitter size={18} className="relative z-10" />
+                <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full border border-gray-700 z-10"></div>
+                <FaTwitter size={18} className="relative z-20 opacity-50" />
+                <FaLock size={10} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
                 <motion.div 
-                  className="absolute inset-0 bg-dark/50 rounded-full border border-transparent group-hover:border-neon-pink/30"
-                  whileHover={{ boxShadow: '0 0 8px rgba(var(--neon-pink), 0.5)' }}
+                  className="absolute inset-0 bg-dark/50 rounded-full"
                 />
-              </motion.a>
+                {/* Tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                  Réseau social en cours de mise à jour, bientôt disponible
+                </div>
+              </motion.div>
             </div>
           </nav>
 
@@ -266,14 +275,7 @@ export default function Header() {
                           ? 'text-neon-blue' 
                           : 'text-gray-300'
                       }`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const element = document.querySelector(item.href);
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' });
-                        }
-                        setIsMobileMenuOpen(false); // Ferme le menu mobile après clic
-                      }}
+                      onClick={(e) => scrollToSection(e, item.href)}
                     >
                       {item.name}
                       {isActive(item.href) && (
@@ -302,51 +304,59 @@ export default function Header() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.4 }}
               >
-                <motion.a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full flex items-center justify-center border border-gray-700 text-gray-400 hover:text-neon-blue hover:border-neon-blue transition-colors relative group"
-                  whileHover={{ y: -5, boxShadow: '0 0 15px rgba(var(--neon-blue), 0.3)' }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="GitHub"
+                {/* GitHub mobile - Désactivé temporairement */}
+                <motion.div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 relative group cursor-not-allowed"
+                  whileHover={{ scale: 1.05 }}
+                  aria-label="GitHub (temporairement indisponible)"
                 >
-                  <FaGithub size={24} />
+                  <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full border border-gray-700 z-10"></div>
+                  <FaGithub size={20} className="relative z-20 opacity-50" />
+                  <FaLock size={12} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
                   <motion.div 
-                    className="absolute inset-0 rounded-full border border-neon-blue/0 group-hover:border-neon-blue/30"
-                    whileHover={{ boxShadow: '0 0 15px rgba(var(--neon-blue), 0.3)' }}
+                    className="absolute inset-0 bg-dark/50 rounded-full"
                   />
-                </motion.a>
-                <motion.a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full flex items-center justify-center border border-gray-700 text-gray-400 hover:text-neon-purple hover:border-neon-purple transition-colors relative group"
-                  whileHover={{ y: -5, boxShadow: '0 0 15px rgba(var(--neon-purple), 0.3)' }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="LinkedIn"
+                  {/* Tooltip */}
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                    Réseau social en cours de mise à jour, bientôt disponible
+                  </div>
+                </motion.div>
+                
+                {/* LinkedIn mobile - Désactivé temporairement */}
+                <motion.div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 relative group cursor-not-allowed"
+                  whileHover={{ scale: 1.05 }}
+                  aria-label="LinkedIn (temporairement indisponible)"
                 >
-                  <FaLinkedin size={24} />
+                  <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full border border-gray-700 z-10"></div>
+                  <FaLinkedin size={20} className="relative z-20 opacity-50" />
+                  <FaLock size={12} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
                   <motion.div 
-                    className="absolute inset-0 rounded-full border border-neon-purple/0 group-hover:border-neon-purple/30"
-                    whileHover={{ boxShadow: '0 0 15px rgba(var(--neon-purple), 0.3)' }}
+                    className="absolute inset-0 bg-dark/50 rounded-full"
                   />
-                </motion.a>
-                <motion.a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full flex items-center justify-center border border-gray-700 text-gray-400 hover:text-neon-pink hover:border-neon-pink transition-colors relative group"
-                  whileHover={{ y: -5, boxShadow: '0 0 15px rgba(var(--neon-pink), 0.3)' }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="Twitter"
+                  {/* Tooltip */}
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                    Réseau social en cours de mise à jour, bientôt disponible
+                  </div>
+                </motion.div>
+                
+                {/* Twitter mobile - Désactivé temporairement */}
+                <motion.div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 relative group cursor-not-allowed"
+                  whileHover={{ scale: 1.05 }}
+                  aria-label="Twitter (temporairement indisponible)"
                 >
-                  <FaTwitter size={24} />
+                  <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full border border-gray-700 z-10"></div>
+                  <FaTwitter size={20} className="relative z-20 opacity-50" />
+                  <FaLock size={12} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
                   <motion.div 
-                    className="absolute inset-0 rounded-full border border-neon-pink/0 group-hover:border-neon-pink/30"
-                    whileHover={{ boxShadow: '0 0 15px rgba(var(--neon-pink), 0.3)' }}
+                    className="absolute inset-0 bg-dark/50 rounded-full"
                   />
-                </motion.a>
+                  {/* Tooltip */}
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                    Réseau social en cours de mise à jour, bientôt disponible
+                  </div>
+                </motion.div>
               </motion.div>
             </div>
 

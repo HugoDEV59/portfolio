@@ -256,10 +256,10 @@ export default function ContactSection() {
             className="lg:col-span-2 flex flex-col gap-6"
           >
             {/* Bloc Email */}
-            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest">
+            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest" className="h-[calc(25%-1.25rem)]">
               <Card 
                 glowColor="blue" 
-                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-blue-900/20 transition-all duration-300"
+                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-blue-900/20 transition-all duration-300 h-full"
               >
                 <div className="p-4 rounded-full bg-dark/80 border border-blue-500/30 text-blue-400 shadow-inner">
                   <FaEnvelope size={22} aria-hidden="true" />
@@ -289,10 +289,10 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Bloc Discord */}
-            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest">
+            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest" className="h-[calc(25%-1.25rem)]">
               <Card 
                 glowColor="pink" 
-                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-indigo-900/20 transition-all duration-300"
+                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-indigo-900/20 transition-all duration-300 h-full"
               >
                 <div className="p-4 rounded-full bg-dark/80 border border-pink-500/30 text-pink-400 shadow-inner relative overflow-hidden">
                   <FaDiscord size={22} aria-hidden="true" />
@@ -314,10 +314,10 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Engagement de réponse */}
-            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest">
+            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest" className="h-[calc(25%-1.25rem)]">
               <Card 
                 glowColor="orange" 
-                className="text-center p-8 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-orange-900/20 transition-all duration-300"
+                className="text-center p-8 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-orange-900/20 transition-all duration-300 h-full flex flex-col items-center justify-center"
               >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-orange-400 mx-auto flex items-center justify-center mb-4 relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -342,10 +342,10 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Sécurité des données */}
-            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest">
+            <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest" className="h-[calc(25%-1.25rem)]">
               <Card 
                 glowColor="blue" 
-                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-blue-900/20 transition-all duration-300"
+                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-blue-900/20 transition-all duration-300 h-full"
               >
                 <div className="p-4 rounded-full bg-dark/80 border border-blue-500/30 text-blue-400 shadow-inner">
                   <FaUserShield size={22} aria-hidden="true" />

@@ -6,13 +6,19 @@ import Link from 'next/link';
 import { 
   FaGithub, FaLinkedin, FaTwitter, FaEnvelope, 
   FaHeart, FaArrowUp, FaCode, FaLaptopCode, 
-  FaServer, FaMobileAlt, FaMapMarkerAlt, FaPhoneAlt
+  FaServer, FaMobileAlt, FaMapMarkerAlt, FaPhoneAlt, FaLock,
+  FaReact, FaNodeJs, FaDatabase, FaJs, FaHtml5, FaCss3Alt,
+  FaGamepad, FaLaughSquint, FaRegSurprise, FaRegGrinSquintTears
 } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
 import ClientParticles from '../ui/ClientParticles';
 
 export default function Footer() {
   const [isVisible, setIsVisible] = useState(false);
+  const [visitCount, setVisitCount] = useState<number | null>(null);
+  const [easterEggActive, setEasterEggActive] = useState(false);
+  const [easterEggStage, setEasterEggStage] = useState(0);
+  const [konami, setKonami] = useState<string[]>([]);
   const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(footerRef, { once: true, amount: 0.2 });
@@ -40,6 +46,63 @@ export default function Footer() {
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
+  // Compteur de visites
+  useEffect(() => {
+    // Vérifier si c'est une nouvelle visite
+    const lastVisit = localStorage.getItem('lastVisit');
+    const today = new Date().toDateString();
+    
+    if (lastVisit !== today) {
+      // Stocker la date de visite
+      localStorage.setItem('lastVisit', today);
+      
+      // Incrémenter le compteur dans localStorage
+      const currentCount = parseInt(localStorage.getItem('visitCount') || '0');
+      localStorage.setItem('visitCount', (currentCount + 1).toString());
+      
+      // Envoyer l'information au serveur (simulation)
+      console.log('Nouvelle visite enregistrée');
+    }
+    
+    // Récupérer le compteur
+    const count = parseInt(localStorage.getItem('visitCount') || '0');
+    setVisitCount(count);
+  }, []);
+
+  // Easter Egg - Konami Code
+  useEffect(() => {
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ajouter la touche pressée à l'historique
+      const updatedKonami = [...konami, e.key];
+      
+      // Ne garder que les dernières touches (max longueur du code)
+      if (updatedKonami.length > konamiCode.length) {
+        updatedKonami.shift();
+      }
+      
+      setKonami(updatedKonami);
+      
+      // Vérifier si le code est correct
+      const isKonamiCode = updatedKonami.join(',') === konamiCode.join(',');
+      
+      if (isKonamiCode) {
+        setEasterEggActive(true);
+        setEasterEggStage(1);
+        
+        // Désactiver après 10 secondes
+        setTimeout(() => {
+          setEasterEggActive(false);
+          setEasterEggStage(0);
+        }, 10000);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [konami]);
+
   // Fonction pour remonter en haut de la page
   const scrollToTop = () => {
     window.scrollTo({
@@ -65,6 +128,30 @@ export default function Footer() {
       opacity: 1,
       y: 0,
       transition: { duration: 0.5 }
+    }
+  };
+
+  // Données pour la timeline des technologies
+  const techTimeline = [
+    { year: 2019, icon: <FaHtml5 />, name: 'HTML/CSS', color: 'neon-orange' },
+    { year: 2020, icon: <FaJs />, name: 'JavaScript', color: 'neon-yellow' },
+    { year: 2021, icon: <FaReact />, name: 'React', color: 'neon-blue' },
+    { year: 2022, icon: <FaNodeJs />, name: 'Node.js', color: 'neon-green' },
+    { year: 2023, icon: <FaDatabase />, name: 'MongoDB', color: 'neon-purple' }
+  ];
+
+  // Fonction pour formater le nombre de visites
+  const formatVisitCount = (count: number): string[] => {
+    return count.toString().padStart(4, '0').split('');
+  };
+
+  // Fonction pour activer l'easter egg au clic
+  const activateEasterEgg = () => {
+    if (!easterEggActive) {
+      setEasterEggActive(true);
+      setEasterEggStage(prev => (prev + 1) % 4);
+    } else {
+      setEasterEggStage(prev => (prev + 1) % 4);
     }
   };
 
@@ -113,7 +200,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         {/* Grille principale */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -131,103 +218,100 @@ export default function Footer() {
               />
             </Link>
             <p className="text-gray-400 text-sm mb-4">
-              Portfolio de développeur web spécialisé dans la création d'expériences web modernes, 
+              Site Web/Portfolio de Hugo, développeur web spécialisé dans la création d'expériences web modernes, 
               interactives et performantes.
             </p>
             
             <div className="flex space-x-3 mt-2">
-              <motion.a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center bg-dark/50 border border-gray-700 text-gray-400 hover:text-neon-blue hover:border-neon-blue transition-all relative group"
-                whileHover={{ y: -3, scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="GitHub"
+              {/* GitHub - Désactivé temporairement */}
+              <motion.div
+                className="w-9 h-9 rounded-full flex items-center justify-center bg-dark/50 border border-gray-700 text-gray-500 relative group cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                aria-label="GitHub (temporairement indisponible)"
               >
-                <FaGithub size={18} />
-                <motion.div 
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                  animate={{ 
-                    boxShadow: ['0 0 0px rgba(var(--neon-blue), 0)', '0 0 8px rgba(var(--neon-blue), 0.5)', '0 0 0px rgba(var(--neon-blue), 0)'],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </motion.a>
-              <motion.a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center bg-dark/50 border border-gray-700 text-gray-400 hover:text-neon-purple hover:border-neon-purple transition-all relative group"
-                whileHover={{ y: -3, scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="LinkedIn"
+                <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full z-10"></div>
+                <FaGithub size={18} className="relative z-20 opacity-50" />
+                <FaLock size={10} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
+                <div className="absolute inset-0 bg-dark/50 rounded-full"></div>
+                {/* Tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                  Réseau social en cours de mise à jour, bientôt disponible
+                </div>
+              </motion.div>
+              
+              {/* LinkedIn - Désactivé temporairement */}
+              <motion.div
+                className="w-9 h-9 rounded-full flex items-center justify-center bg-dark/50 border border-gray-700 text-gray-500 relative group cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                aria-label="LinkedIn (temporairement indisponible)"
               >
-                <FaLinkedin size={18} />
-                <motion.div 
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                  animate={{ 
-                    boxShadow: ['0 0 0px rgba(var(--neon-purple), 0)', '0 0 8px rgba(var(--neon-purple), 0.5)', '0 0 0px rgba(var(--neon-purple), 0)'],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </motion.a>
-              <motion.a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center bg-dark/50 border border-gray-700 text-gray-400 hover:text-neon-pink hover:border-neon-pink transition-all relative group"
-                whileHover={{ y: -3, scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Twitter"
+                <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full z-10"></div>
+                <FaLinkedin size={18} className="relative z-20 opacity-50" />
+                <FaLock size={10} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
+                <div className="absolute inset-0 bg-dark/50 rounded-full"></div>
+                {/* Tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                  Réseau social en cours de mise à jour, bientôt disponible
+                </div>
+              </motion.div>
+              
+              {/* Twitter - Désactivé temporairement */}
+              <motion.div
+                className="w-9 h-9 rounded-full flex items-center justify-center bg-dark/50 border border-gray-700 text-gray-500 relative group cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                aria-label="Twitter (temporairement indisponible)"
               >
-                <FaTwitter size={18} />
-                <motion.div 
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                  animate={{ 
-                    boxShadow: ['0 0 0px rgba(var(--neon-pink), 0)', '0 0 8px rgba(var(--neon-pink), 0.5)', '0 0 0px rgba(var(--neon-pink), 0)'],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </motion.a>
+                <div className="absolute inset-0 backdrop-blur-sm bg-dark/70 rounded-full z-10"></div>
+                <FaTwitter size={18} className="relative z-20 opacity-50" />
+                <FaLock size={10} className="absolute bottom-0 right-0 text-gray-400 z-30 bg-dark/80 rounded-full p-0.5" />
+                <div className="absolute inset-0 bg-dark/50 rounded-full"></div>
+                {/* Tooltip */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 bg-dark/90 text-gray-300 text-xs py-2 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 border border-gray-700/50 backdrop-blur-sm">
+                  Réseau social en cours de mise à jour, bientôt disponible
+                </div>
+              </motion.div>
             </div>
+            
+            {/* Disponibilité - Déplacé ici */}
+            <motion.div 
+              className="mt-6 pt-4 border-t border-gray-800/30"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center mb-3">
+                <div className="relative mr-3">
+                  <div className="w-3 h-3 bg-neon-green rounded-full"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-neon-green rounded-full"
+                    animate={{ 
+                      scale: [1, 1.5, 1],
+                      opacity: [0.8, 0, 0.8]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                </div>
+                <span className="text-neon-green text-sm font-medium">Disponible pour nouveaux projets</span>
+              </div>
+              <div className="glassmorphism p-3 rounded-lg border border-gray-800/50">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-gray-400">Charge de travail actuelle</span>
+                  <span className="text-xs text-neon-blue">35%</span>
+                </div>
+                <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-neon-blue to-neon-purple rounded-full"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "35%" }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    viewport={{ once: true }}
+                  />
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
-
-          {/* Liens rapides */}
-          <motion.div variants={itemVariants} className="flex flex-col">
-            <h3 className="text-lg font-semibold mb-4 text-light relative inline-block">
-              Navigation
-              <motion.div 
-                className="absolute -bottom-1 left-0 h-0.5 w-12 bg-gradient-to-r from-neon-blue to-transparent"
-                initial={{ width: 0 }}
-                whileInView={{ width: 48 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-              />
-            </h3>
-            <ul className="space-y-2">
-              {[
-                { href: '/', label: 'Accueil' },
-                { href: '/about', label: 'À propos' },
-                { href: '/skills', label: 'Compétences' },
-                { href: '/projects', label: 'Projets' },
-                { href: '/contact', label: 'Contact' }
-              ].map((link, index) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    className="text-gray-400 hover:text-neon-blue transition-colors flex items-center group"
-                  >
-                    <motion.span 
-                      className="w-0 h-0.5 bg-neon-blue mr-0 group-hover:w-2 group-hover:mr-2 transition-all duration-300"
-                    />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
+          
           {/* Services */}
           <motion.div variants={itemVariants} className="flex flex-col">
             <h3 className="text-lg font-semibold mb-4 text-light relative inline-block">
@@ -256,7 +340,7 @@ export default function Footer() {
               ))}
             </ul>
           </motion.div>
-
+          
           {/* Contact */}
           <motion.div variants={itemVariants} className="flex flex-col">
             <h3 className="text-lg font-semibold mb-4 text-light relative inline-block">
@@ -295,29 +379,9 @@ export default function Footer() {
                 </span>
               </li>
             </ul>
-            
-            {/* Newsletter (optionnel) */}
-            <div className="mt-4 pt-4 border-t border-gray-800/50">
-              <form className="flex flex-col space-y-2">
-                <label htmlFor="newsletter" className="text-sm text-gray-400">Newsletter</label>
-                <div className="flex">
-                  <input 
-                    type="email" 
-                    id="newsletter" 
-                    placeholder="Votre email" 
-                    className="bg-dark/50 border border-gray-700 rounded-l-md px-3 py-2 text-sm flex-grow focus:outline-none focus:border-neon-pink focus:ring-1 focus:ring-neon-pink/30 transition-colors"
-                  />
-                  <button 
-                    type="submit" 
-                    className="bg-neon-pink/20 hover:bg-neon-pink/30 border border-neon-pink/50 text-neon-pink rounded-r-md px-3 py-2 text-sm transition-colors"
-                  >
-                    <HiSparkles size={16} />
-                  </button>
-                </div>
-              </form>
-            </div>
           </motion.div>
         </motion.div>
+        
         
         {/* Séparateur */}
         <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-700/50 to-transparent my-8"></div>
@@ -337,8 +401,127 @@ export default function Footer() {
             <span className="flex items-center">
               Créé avec <FaHeart className="text-neon-pink mx-1" size={12} /> et Next.js
             </span>
+            {/* Easter Egg Trigger */}
+            <motion.div 
+              className="ml-2 cursor-pointer opacity-30 hover:opacity-60 transition-opacity"
+              onClick={activateEasterEgg}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaGamepad size={12} className="text-gray-500" />
+            </motion.div>
           </div>
         </motion.div>
+        
+        {/* Easter Egg Content */}
+        {easterEggActive && (
+          <motion.div 
+            className="mt-6 p-4 rounded-lg border border-gray-800/50 glassmorphism text-center relative overflow-hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {easterEggStage === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="text-neon-blue font-mono text-sm mb-2">Félicitations ! Vous avez trouvé l'easter egg !</div>
+                <div className="text-gray-400 text-xs">Cliquez à nouveau sur l'icône pour continuer...</div>
+              </motion.div>
+            )}
+            
+            {easterEggStage === 1 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="py-2"
+              >
+                <div className="text-neon-purple font-mono text-sm mb-3">Saviez-vous que...</div>
+                <div className="text-gray-300 text-sm mb-3">
+                  Pendant que vous lisez ceci, environ 6 000 tweets ont été publiés, 
+                  800 photos Instagram partagées, et un développeur quelque part a 
+                  probablement oublié un point-virgule.
+                </div>
+                <div className="flex justify-center">
+                  <FaLaughSquint className="text-neon-yellow" size={24} />
+                </div>
+              </motion.div>
+            )}
+            
+            {easterEggStage === 2 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="py-2"
+              >
+                <div className="text-neon-green font-mono text-sm mb-3">Message secret :</div>
+                <div className="text-gray-300 text-sm mb-3 font-mono">
+                  01001100 01100101 00100000 01100011 01101111 01100100 01100101 00100000 
+                  01100011 00100111 01100101 01110011 01110100 00100000 01101100 01100001 00100000 
+                  01110110 01101001 01100101
+                </div>
+                <div className="text-neon-pink text-xs mt-2">(Indice : c'est du binaire pour "Le code c'est la vie")</div>
+                <div className="flex justify-center mt-2">
+                  <FaRegSurprise className="text-neon-green" size={24} />
+                </div>
+              </motion.div>
+            )}
+            
+            {easterEggStage === 3 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="py-2"
+              >
+                <div className="text-neon-orange font-mono text-sm mb-3">Blague de développeur :</div>
+                <div className="text-gray-300 text-sm mb-3">
+                  Pourquoi les développeurs préfèrent-ils le noir ? <br/>
+                  <span className="text-neon-blue mt-2 inline-block">Parce qu'ils n'aiment pas les classes !</span>
+                </div>
+                <div className="flex justify-center">
+                  <FaRegGrinSquintTears className="text-neon-orange" size={24} />
+                </div>
+                <div className="text-gray-500 text-xs mt-3">
+                  PS: Essayez le code Konami pour une autre surprise ! <br/>
+                  (↑↑↓↓←→←→BA)
+                </div>
+              </motion.div>
+            )}
+            
+            {/* Particules pour l'easter egg */}
+            <div className="absolute inset-0 pointer-events-none">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  className={`absolute w-1 h-1 rounded-full bg-neon-${
+                    ['blue', 'purple', 'pink', 'green', 'yellow', 'orange'][i % 6]
+                  }`}
+                  initial={{ 
+                    x: Math.random() * 100 + '%', 
+                    y: Math.random() * 100 + '%',
+                    opacity: 0
+                  }}
+                  animate={{ 
+                    x: Math.random() * 100 + '%',
+                    y: Math.random() * 100 + '%',
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{ 
+                    duration: 2 + Math.random() * 3,
+                    repeat: Infinity,
+                    delay: Math.random() * 2
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
       
       {/* Bouton "Retour en haut" */}

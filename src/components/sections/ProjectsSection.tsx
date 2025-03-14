@@ -179,21 +179,24 @@ export default function ProjectsSection() {
                 et seront bientôt disponibles.
               </p>
               
-              <Button 
-                variant="outline"
-                className="relative overflow-hidden group border border-neon-blue/30 bg-dark/60 backdrop-blur-sm"
-              >
-                <span className="relative z-10 flex items-center">
-                  <FaLock className="mr-2 text-neon-blue/70 text-sm" />
-                  Bientôt disponible
-                </span>
-                <motion.span 
-                  className="absolute bottom-0 left-0 h-0.5 w-full bg-neon-blue/40"
-                  initial={{ width: "0%" }}
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Button>
+              <div className="flex flex-col items-center space-y-4">
+                <Button 
+                  variant="outline"
+                  className="relative overflow-hidden group border border-neon-blue/30 bg-dark/60 backdrop-blur-sm"
+                >
+                  <span className="relative z-10 flex items-center">
+                    <FaLock className="mr-2 text-neon-blue/70 text-sm" />
+                    Bientôt disponible
+                  </span>
+                  <motion.span 
+                    className="absolute bottom-0 left-0 h-0.5 w-full bg-neon-blue/40"
+                    initial={{ width: "0%" }}
+                    whileHover={{ width: "100%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Button>
+              
+              </div>
             </div>
             
             {/* Particules décoratives */}
