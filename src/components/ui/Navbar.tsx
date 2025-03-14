@@ -4,8 +4,15 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaHome, FaUser, FaCode, FaBriefcase, FaEnvelope } from 'react-icons/fa';
+import React from 'react';
 
-const navItems = [
+type NavItem = {
+  name: string;
+  href: string;
+  icon: React.ReactNode;
+};
+
+const navItems: NavItem[] = [
   { name: 'Accueil', href: '/', icon: <FaHome /> },
   { name: 'À propos', href: '/about', icon: <FaUser /> },
   { name: 'Compétences', href: '/skills', icon: <FaCode /> },
@@ -61,8 +68,8 @@ export default function Navbar() {
               whileTap={{ scale: 0.95 }}
             >
               <span className="font-mono">{'<'}</span>
-              <span className="text-neon-blue">Dev</span>
-              <span className="text-neon-purple">Portfolio</span>
+              <span className="text-neon-blue">Hugo</span>
+              <span className="text-neon-purple">Xdev</span>
               <span className="font-mono">{'/>'}</span>
             </motion.div>
           </Link>
@@ -106,7 +113,7 @@ export default function Navbar() {
   );
 }
 
-function MobileMenu({ navItems, activeItem }: { navItems: typeof navItems; activeItem: string }) {
+function MobileMenu({ navItems, activeItem }: { navItems: NavItem[]; activeItem: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

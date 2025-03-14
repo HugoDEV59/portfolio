@@ -61,9 +61,9 @@ export default function Logo() {
         </motion.span>
         
         <span className="flex">
-          {['D', 'e', 'v'].map((letter, i) => (
+          {['H', 'u', 'g', 'o'].map((letter, i) => (
             <NeonText 
-              key={`dev-${i}`}
+              key={`Hugo-${i}`}
               color="blue"
               flickerIntensity={i === 1 ? 'high' : 'low'}
               className="mx-[1px]"
@@ -74,9 +74,9 @@ export default function Logo() {
         </span>
         
         <span className="flex">
-          {['P', 'o', 'r', 't', 'f', 'o', 'l', 'i', 'o'].map((letter, i) => (
+          {['X', 'd', 'e', 'v'].map((letter, i) => (
             <NeonText 
-              key={`portfolio-${i}`}
+              key={`Xdev-${i}`}
               color="purple"
               flickerIntensity={i % 3 === 0 ? 'medium' : 'low'}
               className="mx-[1px]"
@@ -89,7 +89,7 @@ export default function Logo() {
         <motion.span 
           className="font-mono text-gray-400"
           variants={letterVariants}
-          custom={13}
+          custom={8}
         >
           {'/>'}
         </motion.span>

@@ -802,11 +802,11 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Contactez-moi par Email</h3>
-                  <p className="text-gray-300">contact@votredomaine.com</p>
+                  <p className="text-gray-300">HugoXdev@proton.me</p>
                   <a 
-                    href="mailto:contact@votredomaine.com" 
+                    href="mailto:HugoXdev@proton.me" 
                     className="text-blue-400 hover:text-blue-300 mt-2 inline-flex items-center gap-1 font-medium group"
-                    aria-label="M'envoyer un email à contact@votredomaine.com"
+                    aria-label="M'envoyer un email à HugoXdev@proton.me"
                   >
                     M'envoyer un email
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1 transform group-hover:translate-x-1 transition-transform" aria-hidden="true">
@@ -835,7 +835,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Contactez-moi sur Discord</h3>
-                  <p className="text-gray-300">VotreIdentifiantDiscord#1234</p>
+                  <p className="text-gray-300">んひムの#7095</p>
                   <p className="text-gray-400 text-sm mt-2">
                     N'hésitez pas à m'ajouter pour discuter de vos projets !
                   </p>
@@ -883,7 +883,7 @@ export default function ContactSection() {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Sécurité des données</h3>
                   <p className="text-gray-300 text-sm">
-                    Toutes vos informations sont cryptées et sécurisées. Je respecte le RGPD et ne partage jamais vos données avec des tiers.
+                    Toutes vos informations sont chiffrées et sécurisées. Je respecte le RGPD et ne partage jamais vos données avec des tiers.
                   </p>
                 </div>
               </Card>

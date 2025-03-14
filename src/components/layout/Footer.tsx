@@ -123,8 +123,8 @@ export default function Footer() {
           <motion.div variants={itemVariants} className="flex flex-col">
             <Link href="/" className="text-2xl font-bold mb-4 inline-block group">
               <span className="font-mono text-gray-400 group-hover:text-gray-300 transition-colors">{'<'}</span>
-              <span className="text-neon-blue group-hover:text-neon-blue/80 transition-colors">Dev</span>
-              <span className="text-neon-purple group-hover:text-neon-purple/80 transition-colors">Portfolio</span>
+              <span className="text-neon-blue group-hover:text-neon-blue/80 transition-colors">Hugo</span>
+              <span className="text-neon-purple group-hover:text-neon-purple/80 transition-colors">Xdev</span>
               <span className="font-mono text-gray-400 group-hover:text-gray-300 transition-colors">{'/>'}</span>
               <motion.div 
                 className="h-0.5 w-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink group-hover:w-full transition-all duration-300"
@@ -272,11 +272,11 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a 
-                  href="mailto:contact@example.com" 
+                  href="mailto:HugoXdev@proton.me" 
                   className="text-gray-400 hover:text-neon-pink transition-colors flex items-center group"
                 >
                   <span className="text-neon-pink/70 mr-2"><FaEnvelope size={14} /></span>
-                  contact@example.com
+                  HugoXdev@proton.me
                   <motion.div 
                     className="h-0.5 w-0 bg-neon-pink/30 ml-0 group-hover:w-2 group-hover:ml-2 transition-all duration-300"
                   />
@@ -285,13 +285,13 @@ export default function Footer() {
               <li>
                 <span className="text-gray-400 flex items-center">
                   <span className="text-neon-pink/70 mr-2"><FaPhoneAlt size={14} /></span>
-                  +33 6 12 34 56 78
+                  んひムの#7095
                 </span>
               </li>
               <li>
                 <span className="text-gray-400 flex items-center">
                   <span className="text-neon-pink/70 mr-2"><FaMapMarkerAlt size={14} /></span>
-                  Paris, France
+                  Dunkerque, France
                 </span>
               </li>
             </ul>
@@ -330,7 +330,7 @@ export default function Footer() {
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <div className="mb-4 md:mb-0 flex items-center">
-            <span>&copy; {currentYear} DevPortfolio. Tous droits réservés.</span>
+            <span>&copy; {currentYear} HugoXdev. Tous droits réservés.</span>
           </div>
           
           <div className="flex items-center">

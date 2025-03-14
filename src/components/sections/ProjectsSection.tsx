@@ -134,127 +134,229 @@ export default function ProjectsSection() {
           </p>
         </motion.div>
 
+        {/* Overlay "En cours de développement" */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="absolute inset-0 z-20 flex items-center justify-center"
+          style={{ marginTop: "16rem" }}
         >
-          {projects.map((project) => (
-            <motion.div
-              key={project.id}
-              variants={cardVariants}
-              onMouseEnter={() => setHoveredProject(project.id)}
-              onMouseLeave={() => setHoveredProject(null)}
-              onClick={() => handleProjectClick(project.id)}
-              className="cursor-pointer"
-            >
-              <Card 
-                glowColor={project.color as any} 
-                className="h-full overflow-hidden backdrop-blur-sm bg-dark/40 border border-gray-800/50 transition-all duration-300"
-                hoverEffect="glow"
+          <div className="relative w-full max-w-3xl">
+            <motion.div 
+              className="absolute inset-0 bg-dark/80 backdrop-blur-md rounded-xl"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+            />
+            
+            <div className="relative z-10 p-8 text-center">
+              <motion.div 
+                className="w-20 h-20 mx-auto border-4 border-t-neon-blue border-r-neon-purple border-b-neon-pink border-l-transparent rounded-full mb-6"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              />
+              
+              <motion.h3 
+                className="text-2xl md:text-3xl font-bold mb-4"
+                animate={{ 
+                  textShadow: [
+                    "0 0 7px rgba(59, 130, 246, 0.7), 0 0 10px rgba(59, 130, 246, 0.5)",
+                    "0 0 10px rgba(59, 130, 246, 0.9), 0 0 15px rgba(59, 130, 246, 0.7)",
+                    "0 0 7px rgba(59, 130, 246, 0.7), 0 0 10px rgba(59, 130, 246, 0.5)"
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
               >
-                {project.featured && (
-                  <div className="absolute top-0 right-0 w-20 h-20 z-10">
-                    <div className="absolute transform rotate-45 bg-neon-blue text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
-                      Featured
+                <NeonText color="blue">Projets en développement</NeonText>
+              </motion.h3>
+              
+              <p className="text-gray-300 mb-6 max-w-xl mx-auto">
+                Ces projets sont des exemples de ce que je peux réaliser. 
+                Mes projets personnels sont actuellement en cours de développement 
+                et seront bientôt disponibles.
+              </p>
+              
+              <Button 
+                variant="outline"
+                className="relative overflow-hidden group border border-neon-blue/30 bg-dark/60 backdrop-blur-sm"
+              >
+                <span className="relative z-10 flex items-center">
+                  <FaLock className="mr-2 text-neon-blue/70 text-sm" />
+                  Bientôt disponible
+                </span>
+                <motion.span 
+                  className="absolute bottom-0 left-0 h-0.5 w-full bg-neon-blue/40"
+                  initial={{ width: "0%" }}
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.3 }}
+                />
+              </Button>
+            </div>
+            
+            {/* Particules décoratives */}
+            <motion.div 
+              className="absolute -top-4 -left-4 w-3 h-3 rounded-full bg-neon-blue"
+              animate={{
+                y: [0, -10, 0],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            />
+            <motion.div 
+              className="absolute -bottom-4 -right-4 w-3 h-3 rounded-full bg-neon-pink"
+              animate={{
+                y: [0, 10, 0],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            />
+          </div>
+        </motion.div>
+
+        {/* Conteneur des projets avec effet de flou */}
+        <div className="relative">
+          {/* Effet de flou appliqué aux projets */}
+          <motion.div 
+            className="absolute inset-0 backdrop-blur-sm bg-dark/30 z-10 rounded-xl"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          />
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 relative"
+          >
+            {projects.map((project) => (
+              <motion.div
+                key={project.id}
+                variants={cardVariants}
+                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseLeave={() => setHoveredProject(null)}
+                onClick={() => handleProjectClick(project.id)}
+                className="cursor-pointer"
+              >
+                <Card 
+                  glowColor={project.color as any} 
+                  className="h-full overflow-hidden backdrop-blur-sm bg-dark/40 border border-gray-800/50 transition-all duration-300"
+                  hoverEffect="glow"
+                >
+                  {project.featured && (
+                    <div className="absolute top-0 right-0 w-20 h-20 z-10">
+                      <div className="absolute transform rotate-45 bg-neon-blue text-dark text-xs font-bold py-1 right-[-35px] top-[20px] w-[140px] text-center">
+                        Featured
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="relative h-48 mb-4 overflow-hidden rounded-md group">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className={`transition-all duration-700 ${
+                        hoveredProject === project.id ? 'scale-110 brightness-110' : 'scale-100'
+                      }`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-60"></div>
+                    
+                    {/* Overlay avec liens */}
+                    <div className={`absolute inset-0 bg-dark/70 flex items-center justify-center gap-4 transition-opacity duration-300 ${
+                      hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <a 
+                        href={project.demoLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full bg-neon-blue/20 flex items-center justify-center text-neon-blue hover:bg-neon-blue/30 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FaExternalLinkAlt />
+                      </a>
+                      <a 
+                        href={project.isPrivate ? "#" : project.githubLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                          project.isPrivate 
+                            ? 'bg-gray-700/20 text-gray-400 cursor-not-allowed' 
+                            : 'bg-neon-purple/20 text-neon-purple hover:bg-neon-purple/30'
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (project.isPrivate) e.preventDefault();
+                        }}
+                      >
+                        {project.isPrivate ? <FaLock /> : <FaGithub />}
+                      </a>
                     </div>
                   </div>
-                )}
-                
-                <div className="relative h-48 mb-4 overflow-hidden rounded-md group">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    className={`transition-all duration-700 ${
-                      hoveredProject === project.id ? 'scale-110 brightness-110' : 'scale-100'
-                    }`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-60"></div>
                   
-                  {/* Overlay avec liens */}
-                  <div className={`absolute inset-0 bg-dark/70 flex items-center justify-center gap-4 transition-opacity duration-300 ${
-                    hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
-                  }`}>
+                  <h3 className="text-xl font-semibold mb-2 flex items-center">
+                    {project.title}
+                    {project.isPrivate && (
+                      <FaLock className="ml-2 text-gray-400 text-sm" title="Code source privé" />
+                    )}
+                  </h3>
+                  
+                  <p className="text-gray-300 mb-4 text-sm">
+                    {activeProject === project.id ? project.longDescription : project.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`text-xs px-2 py-1 rounded-full bg-${project.color}/10 text-${project.color} border border-${project.color}/30`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        handleProjectClick(project.id);
+                      }}
+                    >
+                      {activeProject === project.id ? "Moins de détails" : "Plus de détails"}
+                    </Button>
+                    
                     <a 
                       href={project.demoLink} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-neon-blue/20 flex items-center justify-center text-neon-blue hover:bg-neon-blue/30 transition-colors"
                       onClick={(e) => e.stopPropagation()}
+                      className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                     >
-                      <FaExternalLinkAlt />
-                    </a>
-                    <a 
-                      href={project.isPrivate ? "#" : project.githubLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                        project.isPrivate 
-                          ? 'bg-gray-700/20 text-gray-400 cursor-not-allowed' 
-                          : 'bg-neon-purple/20 text-neon-purple hover:bg-neon-purple/30'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (project.isPrivate) e.preventDefault();
-                      }}
-                    >
-                      {project.isPrivate ? <FaLock /> : <FaGithub />}
+                      <span>Démo</span>
+                      <FaExternalLinkAlt size={10} />
                     </a>
                   </div>
-                </div>
-                
-                <h3 className="text-xl font-semibold mb-2 flex items-center">
-                  {project.title}
-                  {project.isPrivate && (
-                    <FaLock className="ml-2 text-gray-400 text-sm" title="Code source privé" />
-                  )}
-                </h3>
-                
-                <p className="text-gray-300 mb-4 text-sm">
-                  {activeProject === project.id ? project.longDescription : project.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`text-xs px-2 py-1 rounded-full bg-${project.color}/10 text-${project.color} border border-${project.color}/30`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => {
-                      handleProjectClick(project.id);
-                    }}
-                  >
-                    {activeProject === project.id ? "Moins de détails" : "Plus de détails"}
-                  </Button>
-                  
-                  <a 
-                    href={project.demoLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
-                  >
-                    <span>Démo</span>
-                    <FaExternalLinkAlt size={10} />
-                  </a>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
         <motion.div 
           className="text-center mt-12"
@@ -264,12 +366,17 @@ export default function ProjectsSection() {
           viewport={{ once: true }}
         >
           <Button 
-            variant="primary"
-            className="relative overflow-hidden group"
+            variant="ghost"
+            className="relative overflow-hidden group opacity-70 cursor-not-allowed border border-gray-700/50 bg-dark/40 backdrop-blur-sm"
+            disabled
           >
-            <span className="relative z-10">Voir tous les projets</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            <span className="relative z-10 flex items-center text-gray-400">
+              <FaLock className="mr-2 text-sm" />
+              Voir tous les projets
+            </span>
+            <div className="absolute -bottom-1 left-0 w-full h-px bg-gray-700/30"></div>
           </Button>
+          <p className="text-gray-500 text-sm mt-2 italic">Accès temporairement indisponible</p>
         </motion.div>
       </div>
 
