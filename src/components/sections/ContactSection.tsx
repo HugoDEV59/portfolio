@@ -490,7 +490,7 @@ export default function ContactSection() {
                   </div>
                 )}
                 
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" data-netlify="true">
                   <AnimatePresence mode="wait">
                     {submitSuccess ? (
                       <motion.div
