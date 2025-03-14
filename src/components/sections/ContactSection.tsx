@@ -309,6 +309,16 @@ export default function ContactSection() {
       ref={containerRef}
       aria-labelledby="contact-heading"
     >
+      {/* Formulaire caché pour Netlify */}
+      <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+        <input type="text" name="firstName" />
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <input type="text" name="discord" />
+        <input type="text" name="subject" />
+        <textarea name="message"></textarea>
+      </form>
+      
       {showConfetti && <Confetti />}
       
       {/* Fond dynamique */}
