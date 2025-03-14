@@ -7,19 +7,64 @@ import {
 import { RiSendPlaneFill } from 'react-icons/ri';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
+// Composant Confetti pour l'animation de succès
+const Confetti = () => {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50">
+      {Array.from({ length: 100 }).map((_, i) => {
+        const size = Math.random() * 10 + 5;
+        const left = Math.random() * 100;
+        const animationDuration = Math.random() * 3 + 2;
+        const delay = Math.random() * 0.5;
+        const color = [
+          'bg-neon-blue',
+          'bg-neon-purple',
+          'bg-neon-pink',
+          'bg-green-400',
+          'bg-yellow-400'
+        ][Math.floor(Math.random() * 5)];
+        
+        return (
+          <motion.div
+            key={i}
+            className={`absolute rounded-full ${color}`}
+            style={{
+              width: size,
+              height: size,
+              left: `${left}%`,
+              top: '-20px',
+            }}
+            initial={{ y: -100, opacity: 0 }}
+            animate={{
+              y: ['0%', '100vh'],
+              opacity: [0, 1, 0],
+              rotate: [0, 360 * (Math.random() > 0.5 ? 1 : -1)]
+            }}
+            transition={{
+              duration: animationDuration,
+              delay: delay,
+              ease: [0.1, 0.25, 0.3, 1],
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 // Formulaire caché pour Netlify (sera rendu une seule fois)
 export const NetlifyFormDetection = () => (
   <div>
     <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-    <input type="text" name="firstName" />
-    <input type="text" name="name" />
-    <input type="email" name="email" />
-    <input type="text" name="discord" />
-    <input type="text" name="subject" />
-    <textarea name="message"></textarea>
-  </form>
+      <input type="text" name="firstName" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="discord" />
+      <input type="text" name="subject" />
+      <textarea name="message"></textarea>
+      <input type="hidden" name="form-name" value="contact" />
+    </form>
   </div>
-  
 );
 
 export default function ContactForm() {
@@ -143,6 +188,9 @@ export default function ContactForm() {
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
       
+      // Log pour le débogage
+      console.log('Envoi du formulaire avec les données:', Object.fromEntries(formData));
+      
       // Envoi du formulaire à Netlify
       const response = await fetch("/", {
         method: "POST",
@@ -150,10 +198,15 @@ export default function ContactForm() {
         body: new URLSearchParams(formData as any).toString()
       });
       
+      // Log de la réponse pour le débogage
+      console.log('Réponse du serveur:', response.status, response.statusText);
+      
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'envoi du message');
+        throw new Error(`Erreur lors de l'envoi du message: ${response.status} ${response.statusText}`);
       }
       
+      // Succès
+      console.log('Formulaire envoyé avec succès!');
       setSubmitSuccess(true);
       setShowConfetti(true);
       
@@ -166,22 +219,26 @@ export default function ContactForm() {
         setShowConfetti(false);
       }, 5000);
     } catch (error) {
-      // En développement, simulons un succès
-      // À supprimer en production
-      setSubmitSuccess(true);
-      setShowConfetti(true);
+      console.error('Erreur lors de l\'envoi du formulaire:', error);
       
-      // Réinitialiser le formulaire après 5 secondes
-      setTimeout(() => {
-        setFormState({ firstName: '', name: '', email: '', discord: '', subject: '', message: '' });
-        setMessageLength(0);
-        setFormTouched(false);
-        setSubmitSuccess(false);
-        setShowConfetti(false);
-      }, 5000);
-      
-      // Code pour la gestion d'erreur en production
-      // setSubmitError(error instanceof Error ? error.message : 'Une erreur est survenue');
+      // En environnement de développement, simulons un succès
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Mode développement: simulation de succès');
+        setSubmitSuccess(true);
+        setShowConfetti(true);
+        
+        // Réinitialiser le formulaire après 5 secondes
+        setTimeout(() => {
+          setFormState({ firstName: '', name: '', email: '', discord: '', subject: '', message: '' });
+          setMessageLength(0);
+          setFormTouched(false);
+          setSubmitSuccess(false);
+          setShowConfetti(false);
+        }, 5000);
+      } else {
+        // En production, afficher l'erreur
+        setSubmitError(error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'envoi du message');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -217,6 +274,8 @@ export default function ContactForm() {
 
   return (
     <>
+      {showConfetti && <Confetti />}
+      
       {/* Indicateur de progression du formulaire */}
       {formTouched && !submitSuccess && (
         <div className="mb-6">
@@ -235,9 +294,11 @@ export default function ContactForm() {
         </div>
       )}
       
-      <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" name="contact" method="POST">
-        <input type="hidden" name="form-name" value="contact" />
+      <form ref={formRef} onSubmit={handleSubmit} method="POST" data-netlify="true" className="space-y-6" name="contact">
         {/* Champ caché nécessaire pour Netlify */}
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="bot-field" />
+        
         <AnimatePresence mode="wait">
           {submitSuccess ? (
             <motion.div
