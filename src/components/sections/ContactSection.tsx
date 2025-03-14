@@ -310,7 +310,7 @@ export default function ContactSection() {
       aria-labelledby="contact-heading"
     >
       {/* Formulaire caché pour Netlify */}
-      <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <form name="contact" netlify data-netlify-honeypot="bot-field" hidden>
         <input type="text" name="firstName" />
         <input type="text" name="name" />
         <input type="email" name="email" />
@@ -497,7 +497,7 @@ export default function ContactSection() {
                   </div>
                 )}
                 
-                <form ref={formRef} onSubmit={handleSubmit} method="POST" className="space-y-6" data-netlify="true" name="contact">
+                <form ref={formRef} onSubmit={handleSubmit} method="POST" className="space-y-6" name="contact">
                   {/* Champ caché nécessaire pour Netlify */}
                   <input type="hidden" name="form-name" value="contact" />
                   
