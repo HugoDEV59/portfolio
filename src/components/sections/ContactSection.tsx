@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Card from '@/components/ui/Card';
 import { 
@@ -12,6 +12,37 @@ import ClientParticles from '../ui/ClientParticles';
 export default function ContactSection() {
   // Référence pour l'animation basée sur le scroll
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Script pour Netlify Forms
+  useEffect(() => {
+    // Fonction pour s'assurer que Netlify détecte correctement le formulaire
+    const setupNetlifyForm = () => {
+      if (typeof window !== 'undefined') {
+        // Force la détection du formulaire par Netlify
+        const form = document.querySelector('form[name="contact"]');
+        if (form) {
+          console.log('Formulaire de contact détecté, configuration pour Netlify...');
+          
+          // S'assurer que tous les attributs nécessaires sont présents
+          form.setAttribute('data-netlify', 'true');
+          form.setAttribute('data-netlify-honeypot', 'bot-field');
+          
+          // Vérifier que le champ form-name est présent
+          let formNameInput = form.querySelector('input[name="form-name"]');
+          if (!formNameInput) {
+            formNameInput = document.createElement('input');
+            formNameInput.setAttribute('type', 'hidden');
+            formNameInput.setAttribute('name', 'form-name');
+            formNameInput.setAttribute('value', 'contact');
+            form.prepend(formNameInput);
+          }
+        }
+      }
+    };
+
+    // Exécuter après le rendu complet
+    setTimeout(setupNetlifyForm, 1000);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,

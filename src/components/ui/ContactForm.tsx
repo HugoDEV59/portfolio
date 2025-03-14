@@ -93,6 +93,7 @@ export default function ContactForm() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [messageLength, setMessageLength] = useState(0);
   const [formTouched, setFormTouched] = useState(false);
+  const [showForm, setShowForm] = useState(true); // Nouvel état pour contrôler l'affichage du formulaire
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -188,8 +189,22 @@ export default function ContactForm() {
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
       
-      // Log pour le débogage
-      console.log('Envoi du formulaire avec les données:', Object.fromEntries(formData));
+      // Log détaillé pour le débogage
+      console.log('=== DÉBUT DES LOGS DE DÉBOGAGE FORMULAIRE ===');
+      console.log('Formulaire HTML:', form.outerHTML);
+      console.log('Action du formulaire:', form.action);
+      console.log('Méthode du formulaire:', form.method);
+      console.log('Attributs data-netlify:', form.getAttribute('data-netlify'));
+      console.log('Attributs data-netlify-honeypot:', form.getAttribute('data-netlify-honeypot'));
+      
+      // Log des données du formulaire
+      const formDataObj = Object.fromEntries(formData);
+      console.log('Données du formulaire:', formDataObj);
+      
+      // Vérification du champ form-name
+      console.log('Champ form-name présent:', formData.has('form-name'));
+      console.log('Valeur du champ form-name:', formData.get('form-name'));
+      console.log('=== FIN DES LOGS DE DÉBOGAGE FORMULAIRE ===');
       
       // Envoi du formulaire à Netlify
       const response = await fetch("/", {
@@ -199,7 +214,12 @@ export default function ContactForm() {
       });
       
       // Log de la réponse pour le débogage
-      console.log('Réponse du serveur:', response.status, response.statusText);
+      console.log('=== DÉBUT DES LOGS DE RÉPONSE ===');
+      console.log('Statut de la réponse:', response.status, response.statusText);
+      console.log('Headers de la réponse:', Object.fromEntries(response.headers.entries()));
+      console.log('URL de la réponse:', response.url);
+      console.log('Type de la réponse:', response.type);
+      console.log('=== FIN DES LOGS DE RÉPONSE ===');
       
       if (!response.ok) {
         throw new Error(`Erreur lors de l'envoi du message: ${response.status} ${response.statusText}`);
@@ -209,14 +229,16 @@ export default function ContactForm() {
       console.log('Formulaire envoyé avec succès!');
       setSubmitSuccess(true);
       setShowConfetti(true);
+      setShowForm(false); // Cacher le formulaire lors du succès
       
-      // Réinitialiser le formulaire après 5 secondes
+      // Réinitialiser le formulaire après le délai
       setTimeout(() => {
         setFormState({ firstName: '', name: '', email: '', discord: '', subject: '', message: '' });
         setMessageLength(0);
         setFormTouched(false);
         setSubmitSuccess(false);
         setShowConfetti(false);
+        setShowForm(true); // Réafficher le formulaire après réinitialisation
       }, 5000);
     } catch (error) {
       console.error('Erreur lors de l\'envoi du formulaire:', error);
@@ -226,14 +248,16 @@ export default function ContactForm() {
         console.log('Mode développement: simulation de succès');
         setSubmitSuccess(true);
         setShowConfetti(true);
+        setShowForm(false); // Cacher le formulaire lors du succès simulé
         
-        // Réinitialiser le formulaire après 5 secondes
+        // Réinitialiser le formulaire après le délai
         setTimeout(() => {
           setFormState({ firstName: '', name: '', email: '', discord: '', subject: '', message: '' });
           setMessageLength(0);
           setFormTouched(false);
           setSubmitSuccess(false);
           setShowConfetti(false);
+          setShowForm(true); // Réafficher le formulaire après réinitialisation
         }, 5000);
       } else {
         // En production, afficher l'erreur
@@ -277,7 +301,7 @@ export default function ContactForm() {
       {showConfetti && <Confetti />}
       
       {/* Indicateur de progression du formulaire */}
-      {formTouched && !submitSuccess && (
+      {formTouched && !submitSuccess && showForm && (
         <div className="mb-6">
           <div className="flex justify-between text-xs text-gray-400 mb-1">
             <span>Progression du formulaire</span>
@@ -294,42 +318,42 @@ export default function ContactForm() {
         </div>
       )}
       
-      <form ref={formRef} onSubmit={handleSubmit} method="POST" data-netlify="true" className="space-y-6" name="contact">
-        {/* Champ caché nécessaire pour Netlify */}
-        <input type="hidden" name="form-name" value="contact" />
-        <input type="hidden" name="bot-field" />
-        
-        <AnimatePresence mode="wait">
-          {submitSuccess ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="bg-green-500/20 border border-green-500/30 rounded-lg p-8 text-center"
+      <AnimatePresence mode="wait">
+        {submitSuccess ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="bg-green-500/20 border border-green-500/30 rounded-lg p-8 text-center"
+          >
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 10 }}
+              className="w-20 h-20 rounded-full bg-green-500/30 mx-auto flex items-center justify-center mb-4"
             >
-              <motion.div 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                className="w-20 h-20 rounded-full bg-green-500/30 mx-auto flex items-center justify-center mb-4"
-              >
-                <IoIosCheckmarkCircle size={50} className="text-green-400" />
-              </motion.div>
-              <h4 className="text-2xl font-bold text-green-400 mb-2">Message envoyé avec succès !</h4>
-              <p className="text-gray-300 mb-4">
-                Merci pour votre message. Je vous répondrai dans les plus brefs délais.
-              </p>
-              <div className="flex justify-center">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 5 }}
-                  className="h-1 bg-green-400/50 rounded-full"
-                />
-              </div>
+              <IoIosCheckmarkCircle size={50} className="text-green-400" />
             </motion.div>
-          ) : (
-            <>
+            <h4 className="text-2xl font-bold text-green-400 mb-2">Message envoyé avec succès !</h4>
+            <p className="text-gray-300 mb-4">
+              Merci pour votre message. Je vous répondrai dans les plus brefs délais.
+            </p>
+            <div className="flex justify-center">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 5 }}
+                className="h-1 bg-green-400/50 rounded-full"
+              />
+            </div>
+          </motion.div>
+        ) : (
+          showForm && (
+            <form ref={formRef} onSubmit={handleSubmit} method="POST" name="contact" className="space-y-6" action="/" data-netlify="true" data-netlify-honeypot="bot-field">
+              {/* Champ caché nécessaire pour Netlify */}
+              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="bot-field" />
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <motion.div className="relative">
                   <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-gray-200">Prénom <span className="text-red-400">*</span></label>
@@ -577,10 +601,10 @@ export default function ContactForm() {
                   </motion.p>
                 )}
               </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </form>
+            </form>
+          )
+        )}
+      </AnimatePresence>
     </>
   );
 } 
