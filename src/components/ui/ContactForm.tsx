@@ -10,8 +10,7 @@ import { IoIosCheckmarkCircle } from 'react-icons/io';
 // Formulaire caché pour Netlify (sera rendu une seule fois)
 export const NetlifyFormDetection = () => (
   <div>
-    <form name="contact" method="POST" data-netlify="true">
-    <input type="hidden" name="form-name" value="contact" />
+    <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
     <input type="text" name="firstName" />
     <input type="text" name="name" />
     <input type="email" name="email" />
@@ -236,7 +235,8 @@ export default function ContactForm() {
         </div>
       )}
       
-      <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" name="contact">
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" name="contact" method="POST">
+        <input type="hidden" name="form-name" value="contact" />
         {/* Champ caché nécessaire pour Netlify */}
         <AnimatePresence mode="wait">
           {submitSuccess ? (
