@@ -148,19 +148,16 @@ export default function ContactSection() {
     setSubmitError('');
     
     try {
-      // Intégration avec un service réel (exemple avec fetch)
-      // Remplacer l'URL par votre endpoint réel
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formState),
-      });
+      // Création des données du formulaire pour Netlify
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
       
-      // Pour le développement, simulons une réponse
-      // À supprimer en production
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Envoi du formulaire à Netlify
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as any).toString()
+      });
       
       if (!response.ok) {
         throw new Error('Erreur lors de l\'envoi du message');
@@ -490,7 +487,10 @@ export default function ContactSection() {
                   </div>
                 )}
                 
-                <form ref={formRef} onSubmit={handleSubmit} name="contact" method="POST" className="space-y-6" data-netlify="true">
+                <form ref={formRef} onSubmit={handleSubmit} method="POST" className="space-y-6" data-netlify="true" name="contact">
+                  {/* Champ caché nécessaire pour Netlify */}
+                  <input type="hidden" name="form-name" value="contact" />
+                  
                   <AnimatePresence mode="wait">
                     {submitSuccess ? (
                       <motion.div
