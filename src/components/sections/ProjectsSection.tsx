@@ -118,7 +118,7 @@ export default function ProjectsSection() {
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-2">
             <span className="relative">
-              Mes <NeonText color="pink">Projets</NeonText>
+              Mes <NeonText color="blue">Projets</NeonText>
               <motion.span 
                 className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-transparent via-neon-pink to-transparent"
                 initial={{ width: 0 }}

@@ -288,16 +288,16 @@ export default function ContactSection() {
               </Card>
             </motion.div>
 
-            {/* Bloc Discord */}
+            {/* Bloc Discord */} 
             <motion.div variants={itemVariants} whileHover="hover" initial="rest" animate="rest" className="h-[calc(25%-1.25rem)]">
               <Card 
-                glowColor="pink" 
-                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-indigo-900/20 transition-all duration-300 h-full"
+                glowColor="blue" 
+                className="flex items-start gap-5 backdrop-blur-sm bg-dark/40 border border-gray-800/50 shadow-xl hover:shadow-blue-900/20 transition-all duration-300 h-full"
               >
-                <div className="p-4 rounded-full bg-dark/80 border border-pink-500/30 text-pink-400 shadow-inner relative overflow-hidden">
+                <div className="p-4 rounded-full bg-dark/80 border border-blue-500/30 text-blue-400 shadow-inner relative overflow-hidden">
                   <FaDiscord size={22} aria-hidden="true" />
                   <motion.div 
-                    className="absolute inset-0 bg-pink-500/20"
+                    className="absolute inset-0 bg-blue-500/20"
                     initial={{ scale: 0, opacity: 0 }}
                     whileHover={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.3 }}

@@ -65,7 +65,7 @@ export default function Logo() {
             <NeonText 
               key={`Hugo-${i}`}
               color="blue"
-              flickerIntensity={i === 1 ? 'high' : 'low'}
+              flickerIntensity={i === 1 ? 'medium' : 'low'}
               className="mx-[1px]"
             >
               {letter}

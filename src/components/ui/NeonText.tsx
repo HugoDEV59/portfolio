@@ -58,14 +58,34 @@ export default function NeonText({
     };
   }, [flickerIntensity]);
   
-  const baseClass = `neon-text-${color}`;
+  // Correction: Mapping des couleurs vers les classes CSS correctes
+  const getColorClass = () => {
+    switch(color) {
+      case 'blue':
+        return 'neon-text'; // Utilise la classe CSS pour le bleu
+      case 'purple':
+        return 'neon-text-purple';
+      case 'pink':
+        return 'neon-text-pink';
+      case 'green':
+        return 'neon-text-green';
+      case 'orange':
+        return 'neon-text-orange';
+      case 'yellow':
+        return 'neon-text-yellow';
+      default:
+        return 'neon-text';
+    }
+  };
+  
+  const colorClass = getColorClass();
   const flickerClass = isFlickering ? 'opacity-30' : '';
   
   const MotionComponent = motion[tag];
   
   return (
     <MotionComponent
-      className={`${baseClass} ${flickerClass} ${className} transition-opacity duration-100`}
+      className={`${colorClass} ${flickerClass} ${className} transition-opacity duration-100`}
       animate={{ 
         opacity: isFlickering ? [1, 0.3, 0.8, 0.2, 1] : 1,
         textShadow: isFlickering ? 'none' : undefined

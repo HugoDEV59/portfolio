@@ -224,8 +224,8 @@ export default function Hero() {
                 ref={subheadingRef}
                 className="text-xl md:text-2xl text-gray-300 max-w-lg glassmorphism p-4 rounded-xl border border-gray-700/50"
               >
-                Je crée des expériences web <span><NeonText color="green">modernes</NeonText></span>, 
-                <span className="mx-1"><NeonText color="pink">interactives</NeonText></span> et 
+                Je crée des expériences web <span><NeonText color="pink">modernes</NeonText></span>, 
+                <span className="mx-1"><NeonText color="green">interactives</NeonText></span> et 
                 <span className="ml-1"><NeonText color="orange">performantes</NeonText></span>
               </motion.p>
             </div>

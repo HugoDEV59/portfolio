@@ -317,7 +317,7 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-light relative inline-block">
               Services
               <motion.div 
-                className="absolute -bottom-1 left-0 h-0.5 w-12 bg-gradient-to-r from-neon-purple to-transparent"
+                className="absolute -bottom-1 left-0 h-0.5 w-12 bg-gradient-to-r from-neon-purple via-neon-pink to-neon-green"
                 initial={{ width: 0 }}
                 whileInView={{ width: 48 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -325,19 +325,30 @@ export default function Footer() {
               />
             </h3>
             <ul className="space-y-2">
-              {[
-                { icon: <FaLaptopCode size={14} />, label: 'Développement Frontend' },
-                { icon: <FaServer size={14} />, label: 'Développement Backend' },
-                { icon: <FaMobileAlt size={14} />, label: 'Applications Responsive' },
-                { icon: <FaCode size={14} />, label: 'Intégration API' }
-              ].map((service, index) => (
-                <li key={index}>
-                  <span className="text-gray-400 hover:text-neon-purple transition-colors flex items-center group cursor-default">
-                    <span className="text-neon-purple/70 mr-2">{service.icon}</span>
-                    {service.label}
-                  </span>
-                </li>
-              ))}
+              <li>
+                <span className="text-gray-400 hover:text-neon-purple transition-colors flex items-center group cursor-default">
+                  <span className="text-neon-purple/70 mr-2"><FaLaptopCode size={14} /></span>
+                  Développement Frontend
+                </span>
+              </li>
+              <li>
+                <span className="text-gray-400 hover:text-neon-pink transition-colors flex items-center group cursor-default">
+                  <span className="text-neon-pink/70 mr-2"><FaServer size={14} /></span>
+                  Développement Backend
+                </span>
+              </li>
+              <li>
+                <span className="text-gray-400 hover:text-neon-green transition-colors flex items-center group cursor-default">
+                  <span className="text-neon-green/70 mr-2"><FaMobileAlt size={14} /></span>
+                  Applications Responsive
+                </span>
+              </li>
+              <li>
+                <span className="text-gray-400 hover:text-neon-orange transition-colors flex items-center group cursor-default">
+                  <span className="text-neon-orange/70 mr-2"><FaCode size={14} /></span>
+                  Intégration API
+                </span>
+              </li>
             </ul>
           </motion.div>
           

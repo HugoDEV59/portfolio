@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #f0f0f0;
+  --background: #050014;
+  --foreground: #F8F8F2;
   --grid-size: 30px;
-  --neon-blue: 0, 243, 255;     /* Conversion en RGB pour faciliter l'utilisation */
-  --neon-purple: 157, 0, 255;   /* Conversion en RGB pour faciliter l'utilisation */
-  --neon-pink: 255, 0, 247;     /* Conversion en RGB pour faciliter l'utilisation */
-  --neon-green: 0, 255, 102;    /* Conversion en RGB pour faciliter l'utilisation */
-  --neon-orange: 255, 102, 0;   /* Nouvelle couleur néon orange */
-  --neon-yellow: 255, 230, 0;   /* Nouvelle couleur néon jaune */
-  --dark: 17, 17, 23;
-  --darker: 10, 10, 15;
-  --light: 226, 226, 226;
+  --neon-blue: 148, 215, 255;    /* Violet néon */
+  --neon-purple: 128, 141, 255;   /* Magenta néon */
+  --neon-pink: 134, 83, 240;     /* Rose néon */
+  --neon-green: 219, 128, 255;    /* Bleu électrique */
+  --neon-orange: 255, 139, 211;     /* Cyan lumineux */
+  --neon-yellow: 255, 159, 255;     /* Vert lime néon (ajouté comme dernière couleur) */
+  --dark: 10, 10, 23;
+  --darker: 5, 0, 20;
+  --light: 248, 248, 242;
 }
 
 @layer base {

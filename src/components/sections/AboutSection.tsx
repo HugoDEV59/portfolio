@@ -50,7 +50,7 @@ export default function AboutSection() {
       id: 'performance',
       title: 'Performance Maximale',
       description: 'J\'optimise chaque ligne de code pour garantir des applications non seulement rapides, mais aussi réactives et fluides, offrant ainsi une expérience utilisateur exceptionnelle.',
-      icon: <FaRocket className="text-neon-green" size={24} />
+      icon: <FaRocket className="text-neon-yellow" size={24} />
     }
   ];
 
@@ -124,7 +124,7 @@ export default function AboutSection() {
         >
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">
-              À propos de <NeonText color="blue">moi</NeonText>
+              À propos de <NeonText color="purple" className="mx-1">moi</NeonText>
             </h2>
           </motion.div>
 
@@ -139,9 +139,9 @@ export default function AboutSection() {
               
               <div className="space-y-6 text-gray-300">
                 <p>
-                  Je m'appelle <NeonText color="yellow" className="mx-1">Hugo</NeonText>, j'ai <NeonText color="pink" className="mx-1">21 ans</NeonText> et je vis à <NeonText color="orange" className="mx-1">Dunkerque</NeonText> dans le Nord de la France. Passionné par le développement web depuis plus de 5 ans, je me spécialise dans la création d'applications 
-                  <NeonText color="purple" className="mx-1">modernes</NeonText> et 
-                  <NeonText color="green" className="mx-1">performantes</NeonText>.
+                  Je m'appelle <NeonText color="blue" className="mx-1">Hugo</NeonText>, j'ai <NeonText color="purple" className="mx-1">21 ans</NeonText> et je vis à <NeonText color="pink" className="mx-1">Dunkerque</NeonText> dans le Nord de la France. Passionné par le développement web depuis plus de 5 ans, je me spécialise dans la création d'applications 
+                  <NeonText color="green" className="mx-1">modernes</NeonText> et 
+                  <NeonText color="orange" className="mx-1">performantes</NeonText>.
                 </p>
                 
                 <p>
@@ -206,7 +206,7 @@ export default function AboutSection() {
             ref={timelineRef}
           >
             <h3 className="text-2xl font-bold mb-8 text-center">
-              <NeonText color="green" className="text-3xl">Parcours Professionnel</NeonText>
+              <NeonText color="pink" flickerIntensity="low" className="text-3xl">Parcours Professionnel</NeonText>
               <motion.span 
                 className="block mx-auto mt-2 h-0.5 w-24 bg-gradient-to-r from-neon-green via-neon-blue to-neon-purple"
                 initial={{ width: 0, opacity: 0 }}
@@ -217,7 +217,9 @@ export default function AboutSection() {
             </h3>
             
             <div className="relative mt-16">
+              
               {/* Ligne de temps verticale */}
+              
               <motion.div 
                 className="absolute left-[15px] md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-blue via-neon-purple to-neon-pink rounded-full"
                 initial={{ height: 0 }}
@@ -249,7 +251,7 @@ export default function AboutSection() {
                   </div>
                   
                   <div className="relative md:pl-8">
-                    <div className="absolute left-[-30px] md:left-[-16px] top-0 w-8 h-8 rounded-full bg-dark border-2 border-neon-blue flex items-center justify-center">
+                    <div className="absolute left-[-32px] w-8 h-8 rounded-full bg-dark border-2 border-neon-blue flex items-center justify-center">
                       <motion.div 
                         className="w-3 h-3 rounded-full bg-neon-blue"
                         animate={{ 
@@ -309,7 +311,7 @@ export default function AboutSection() {
                     </div>
                     
                     <div className="relative md:pl-8">
-                      <div className="absolute left-[-30px] md:left-[-16px] top-0 w-8 h-8 rounded-full bg-dark border-2 border-neon-purple flex items-center justify-center">
+                      <div className="absolute left-[-32px] w-8 h-8 rounded-full bg-dark border-2 border-neon-purple flex items-center justify-center">
                         <motion.div 
                           className="w-3 h-3 rounded-full bg-neon-purple"
                           animate={{ 
@@ -396,7 +398,7 @@ export default function AboutSection() {
                     </div>
                     
                     <div className="relative md:pl-8">
-                      <div className="absolute left-[-30px] md:left-[-16px] top-0 w-8 h-8 rounded-full bg-dark border-2 border-neon-pink flex items-center justify-center">
+                      <div className="absolute left-[-32px] w-8 h-8 rounded-full bg-dark border-2 border-neon-pink flex items-center justify-center">
                         <motion.div 
                           className="w-3 h-3 rounded-full bg-neon-pink"
                           animate={{ 
@@ -470,7 +472,8 @@ export default function AboutSection() {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <NeonText color="blue" className="text-3xl">Diplômes & Certifications</NeonText>
+              <NeonText color="green" flickerIntensity="low" className="text-3xl">Diplômes </NeonText> & 
+              <NeonText color="orange" flickerIntensity="low" className="text-3xl"> Certifications</NeonText>
               <motion.span 
                 className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 h-0.5 w-24 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink"
                 initial={{ width: 0, opacity: 0 }}
@@ -483,7 +486,7 @@ export default function AboutSection() {
             {/* Ligne de temps verticale pour les diplômes */}
             <div className="relative mt-16 mb-10">
               <motion.div 
-                className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-blue via-neon-purple to-neon-pink rounded-full"
+                className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-pink via-neon-purple to-neon-blue rounded-full"
                 initial={{ height: 0 }}
                 whileInView={{ height: "100%" }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
@@ -505,9 +508,9 @@ export default function AboutSection() {
                   viewport={{ once: true }}
                   className="relative mb-20"
                 >
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-3 w-6 h-6 rounded-full bg-dark border-2 border-neon-blue flex items-center justify-center">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-3 w-6 h-6 rounded-full bg-dark border-2 border-neon-pink flex items-center justify-center">
                     <motion.div 
-                      className="w-2 h-2 rounded-full bg-neon-blue"
+                      className="w-2 h-2 rounded-full bg-neon-pink"
                       animate={{ scale: [1, 1.5, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
@@ -515,28 +518,28 @@ export default function AboutSection() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:text-right md:pr-8">
-                      <div className="inline-block px-3 py-1 bg-neon-blue/10 border border-neon-blue/30 rounded-full text-sm text-neon-blue mb-2">2021 - 2023</div>
+                      <div className="inline-block px-3 py-1 bg-neon-pink/10 border border-neon-pink/30 rounded-full text-sm text-neon-pink mb-2">2021 - 2023</div>
                       <h4 className="text-xl font-semibold mb-1">BTS Systèmes Numériques</h4>
                       <p className="text-gray-400 text-sm">Option Informatique et Réseaux (Bac+2)</p>
                     </div>
                     
                     <div className="md:pl-8">
                       <motion.div
-                        whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(59, 130, 246, 0.3)" }}
+                        whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(236, 72, 153, 0.3)" }}
                         transition={{ duration: 0.3 }}
-                        className="bg-dark/60 backdrop-blur-md border border-gray-800/50 rounded-xl p-5 hover:border-neon-blue/50 transition-all duration-300"
+                        className="bg-dark/60 backdrop-blur-md border border-gray-800/50 rounded-xl p-5 hover:border-neon-pink/50 transition-all duration-300"
                       >
                         <div className="flex items-start gap-4">
-                          <div className="bg-neon-blue/10 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-neon-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <div className="bg-neon-pink/10 p-3 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-neon-pink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                             </svg>
                           </div>
                           <div>
                             <div className="flex items-center">
-                              <span className="px-2 py-0.5 text-xs rounded-full bg-neon-blue/10 text-neon-blue border border-neon-blue/30 flex items-center">
+                              <span className="px-2 py-0.5 text-xs rounded-full bg-neon-pink/10 text-neon-pink border border-neon-pink/30 flex items-center">
                                 <motion.div 
-                                  className="w-1.5 h-1.5 rounded-full bg-neon-blue mr-1"
+                                  className="w-1.5 h-1.5 rounded-full bg-neon-pink mr-1"
                                   animate={{ opacity: [1, 0.5, 1] }}
                                   transition={{ duration: 2, repeat: Infinity }}
                                 />
@@ -561,9 +564,9 @@ export default function AboutSection() {
                   viewport={{ once: true }}
                   className="relative mb-20"
                 >
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-3 w-6 h-6 rounded-full bg-dark border-2 border-neon-purple flex items-center justify-center">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-3 w-6 h-6 rounded-full bg-dark border-2 border-neon-green flex items-center justify-center">
                     <motion.div 
-                      className="w-2 h-2 rounded-full bg-neon-purple"
+                      className="w-2 h-2 rounded-full bg-neon-green"
                       animate={{ scale: [1, 1.5, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
@@ -572,21 +575,21 @@ export default function AboutSection() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:text-right md:pr-8 md:order-1 order-2">
                       <motion.div
-                        whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(168, 85, 247, 0.3)" }}
+                        whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(0, 255, 102, 0.3)" }}
                         transition={{ duration: 0.3 }}
-                        className="bg-dark/60 backdrop-blur-md border border-gray-800/50 rounded-xl p-5 hover:border-neon-purple/50 transition-all duration-300"
+                        className="bg-dark/60 backdrop-blur-md border border-gray-800/50 rounded-xl p-5 hover:border-neon-green/50 transition-all duration-300"
                       >
                         <div className="flex items-start gap-4">
-                          <div className="bg-neon-purple/10 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-neon-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <div className="bg-neon-green/10 p-3 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-neon-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                           </div>
                           <div>
                             <div className="flex items-center">
-                              <span className="px-2 py-0.5 text-xs rounded-full bg-neon-purple/10 text-neon-purple border border-neon-purple/30 flex items-center">
+                              <span className="px-2 py-0.5 text-xs rounded-full bg-neon-green/10 text-neon-green border border-neon-green/30 flex items-center">
                                 <motion.div 
-                                  className="w-1.5 h-1.5 rounded-full bg-neon-purple mr-1"
+                                  className="w-1.5 h-1.5 rounded-full bg-neon-green mr-1"
                                   animate={{ opacity: [1, 0.5, 1] }}
                                   transition={{ duration: 2, repeat: Infinity }}
                                 />
@@ -602,7 +605,7 @@ export default function AboutSection() {
                     </div>
                     
                     <div className="md:pl-8 md:order-2 order-1">
-                      <div className="inline-block px-3 py-1 bg-neon-purple/10 border border-neon-purple/30 rounded-full text-sm text-neon-purple mb-2">2023 - 2024</div>
+                      <div className="inline-block px-3 py-1 bg-neon-green/10 border border-neon-green/30 rounded-full text-sm text-neon-green mb-2">2023 - 2024</div>
                       <h4 className="text-xl font-semibold mb-1">Bachelor Chef de Projet</h4>
                       <p className="text-gray-400 text-sm">Titre professionnel de niveau 6 (Bac+3/4)</p>
                     </div>
@@ -617,15 +620,16 @@ export default function AboutSection() {
                   viewport={{ once: true }}
                   className="relative"
                 >
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-3 w-6 h-6 rounded-full bg-dark border-2 border-neon-pink flex items-center justify-center">
+                
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-3 w-6 h-6 rounded-full bg-dark border-2 border-neon-orange flex items-center justify-center z-10">
                     <motion.div 
-                      className="w-2 h-2 rounded-full bg-neon-pink"
+                      className="w-2 h-2 rounded-full bg-neon-orange"
                       animate={{ 
                         scale: [1, 1.5, 1],
                         boxShadow: [
-                          "0 0 0px rgba(236, 72, 153, 0.5)",
-                          "0 0 10px rgba(236, 72, 153, 0.8)",
-                          "0 0 0px rgba(236, 72, 153, 0.5)"
+                          "0 0 0px rgba(255, 102, 0, 0.5)",
+                          "0 0 10px rgba(255, 102, 0, 0.8)",
+                          "0 0 0px rgba(255, 102, 0, 0.5)"
                         ]
                       }}
                       transition={{ duration: 2, repeat: Infinity }}
@@ -633,13 +637,13 @@ export default function AboutSection() {
                   </div>
                   
                   <motion.div
-                    whileHover={{ scale: 1.02, boxShadow: "0 0 25px rgba(236, 72, 153, 0.2)" }}
+                    whileHover={{ scale: 1.02, boxShadow: "0 0 25px rgba(255, 102, 0, 0.2)" }}
                     transition={{ duration: 0.3 }}
-                    className="max-w-3xl mx-auto bg-dark/60 backdrop-blur-md border border-gray-800/50 rounded-xl p-6 hover:border-neon-pink/50 transition-all duration-300 relative overflow-hidden"
+                    className="max-w-3xl mx-auto bg-dark/60 backdrop-blur-md border border-gray-800/50 rounded-xl p-6 hover:border-neon-orange/50 transition-all duration-300 relative overflow-hidden"
                   >
                     {/* Effet de lueur en arrière-plan */}
                     <motion.div 
-                      className="absolute -inset-0.5 bg-gradient-to-r from-neon-pink/0 via-neon-pink/20 to-neon-pink/0 blur-sm"
+                      className="absolute -inset-0.5 bg-gradient-to-r from-neon-orange/0 via-neon-orange/20 to-neon-orange/0 blur-sm"
                       animate={{ 
                         x: ['-100%', '100%'],
                       }}
@@ -651,21 +655,21 @@ export default function AboutSection() {
                     />
                     
                     <div className="text-center mb-4">
-                      <div className="inline-block px-4 py-1 bg-neon-pink/10 border border-neon-pink/30 rounded-full text-sm text-neon-pink mb-2">2024 - aujourd'hui</div>
+                      <div className="inline-block px-4 py-1 bg-neon-orange/10 border border-neon-orange/30 rounded-full text-sm text-neon-orange mb-2">2024 - aujourd'hui</div>
                       <h4 className="text-2xl font-semibold mb-1">Concepteur Développeur d'Applications</h4>
                       <p className="text-gray-400 text-sm">Titre professionnel de niveau 6 (Bac+3/4)</p>
                     </div>
                     
                     <div className="flex justify-center mb-4">
-                      <span className="px-3 py-1 text-sm rounded-full bg-neon-pink/10 text-neon-pink border border-neon-pink/30 flex items-center">
+                      <span className="px-3 py-1 text-sm rounded-full bg-neon-orange/10 text-neon-orange border border-neon-orange/30 flex items-center">
                         <motion.div 
-                          className="w-2 h-2 rounded-full bg-neon-pink mr-2"
+                          className="w-2 h-2 rounded-full bg-neon-orange mr-2"
                           animate={{ 
                             opacity: [0.5, 1, 0.5],
                             boxShadow: [
-                              "0 0 0px rgba(236, 72, 153, 0.5)",
-                              "0 0 8px rgba(236, 72, 153, 0.8)",
-                              "0 0 0px rgba(236, 72, 153, 0.5)"
+                              "0 0 0px rgba(255, 102, 0, 0.5)",
+                              "0 0 8px rgba(255, 102, 0, 0.8)",
+                              "0 0 0px rgba(255, 102, 0, 0.5)"
                             ]
                           }}
                           transition={{ duration: 1.5, repeat: Infinity }}
@@ -675,8 +679,8 @@ export default function AboutSection() {
                     </div>
                     
                     <div className="flex items-center justify-center gap-6 mt-6">
-                      <div className="bg-neon-pink/10 p-4 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-neon-pink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="bg-neon-orange/10 p-4 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-neon-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                       </div>
@@ -690,7 +694,7 @@ export default function AboutSection() {
                     {/* Compétences acquises */}
                     <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-2">
                       {['React', 'Node.js', 'API REST', 'Architecture MVC', 'DevOps', 'UX/UI', 'Agile', 'Tests'].map((skill) => (
-                        <div key={skill} className="px-3 py-1 text-xs rounded-full bg-dark/80 border border-neon-pink/20 text-gray-300 text-center">
+                        <div key={skill} className="px-3 py-1 text-xs rounded-full bg-dark/80 border border-neon-orange/20 text-gray-300 text-center">
                           {skill}
                         </div>
                       ))}
